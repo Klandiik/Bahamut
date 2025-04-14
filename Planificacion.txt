@@ -1,0 +1,15 @@
+cyberark-sim/
+├── backend/
+│   └── src/
+│       ├── auth/
+│       ├── credentials/
+│       ├── users/
+│       └── app.js
+├── frontend/
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       └── App.jsx
+├── infra/
+│   └── terraform/ or cloudformation/
+├── README.md

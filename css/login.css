@@ -1,0 +1,19 @@
+*{
+    /*border: 1px solid black;*/
+    margin: 0;
+    box-sizing: border-box;
+}
+#sec2{
+    display: flex;
+    justify-content: center; /* centra horizontalmente */
+    align-items: center;     /* centra verticalmente */
+    height: 200px;
+    margin: 0;
+}
+.foto{
+    width: 400px;
+}
+figure{
+    width: 100%;
+    text-align: center;
+}

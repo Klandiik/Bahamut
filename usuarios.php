@@ -180,3 +180,5 @@ try {
     die("Error al consultar el rol del usuario: " . $e->getMessage());
 }
 ?>
+
+pedrito

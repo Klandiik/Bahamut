@@ -1,10 +1,10 @@
 <?php
-session_start(); //CReamos una sesion
+session_start(); //Creamos una sesion
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Obtenemos los datos del formulario
-    $usuario = $_POST['nombre'];
-    $contrasena = $_POST['contrasena'];
+    // Obtenemos los datos del formulario con los nuevos nombres
+    $usuario = $_POST['nombre_usuario'];
+    $contrasena = $_POST['contraseña'];
 
     try {
         // Establecemos la conexión a la BD
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Preparacion consulta SQL
-        $sentenciaSelect = "SELECT ID_usuario, nombre, contrasena FROM usuarios WHERE nombre = ? AND contrasena = ?";
+        $sentenciaSelect = "SELECT ID_usuario, nombre_usuario, contraseña FROM usuarios WHERE nombre_usuario = ? AND contraseña = ?";
         $stmt = $conexion->prepare($sentenciaSelect);
         $stmt->bind_param("ss", $usuario, $contrasena);
         $stmt->execute();
@@ -23,10 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Ver si hay resultado
         if ($resultado->num_rows > 0) {
-            // Si la contraseña y el nombre de usuario coiciden , obtenemos el ID del usuario y lo almacenamos en unaa sesión
+            // Si la contraseña y el nombre de usuario coinciden, obtenemos el ID del usuario y lo almacenamos en una sesión
             $usuarioDatos = $resultado->fetch_assoc();
             $_SESSION["ID_usuario"] = $usuarioDatos["ID_usuario"];
-            $_SESSION["nombre"] = $usuarioDatos["nombre"];
+            $_SESSION["nombre"] = $usuarioDatos["nombre_usuario"];
             
             // Redirige a la página principal
             header("Location: principal.php");

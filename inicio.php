@@ -40,7 +40,7 @@
                                 <ion-icon name="mail"></ion-icon>
                             </span>
                             <input type="email" name="email" required="required">
-                            <label>Email</label>
+                            <label>Correo</label>
                             <div class="input-line"></div>
                         </div>
 

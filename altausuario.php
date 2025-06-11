@@ -16,14 +16,14 @@ try {
 
         // Preparar y ejecutar el INSERT
         $sentenciaInsert = $conexion->prepare("INSERT INTO usuarios (nombre, contrasena, correo) VALUES (?, ?, ?)");
-        $sentenciaInsert->bind_param("ssss", $nombre, $contrasenaHash, $correo);
+        $sentenciaInsert->bind_param("sss", $nombre, $contrasenaHash, $correo);
 
         if ($sentenciaInsert->execute()) {
             echo "Usuario dado de alta con éxito.";
             echo "<br><a href='login.php'>Pulsa aquí para iniciar sesión</a>";
         } else {
             echo "Error al dar de alta al nuevo usuario: " . $sentenciaInsert->error;
-            echo "<br><a href='registrar.php'>¿Desea volver a registrarse?</a>";
+            echo "<br><a href='registro.php'>¿Desea volver a registrarse?</a>";
         }
     } else {
         echo "Acceso no válido.";

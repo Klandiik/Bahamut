@@ -26,11 +26,11 @@
                 FROM maquinas m
                 LEFT JOIN credenciales c ON m.id = c.id_maquina
                 ORDER BY m.id";
-        $stmt = $pdo->query($sql);
+        $stmt = $conn->query($sql);
         foreach ($stmt as $row):
         ?>
             <tr>
-                <form method="POST" action="modificar_maquina.php">
+                <form method="POST" action="modificaciones_maquinas.php">
                     <td><input type="text" name="nombre" value="<?= htmlspecialchars($row['nombre']) ?>" class="form-control" /></td>
                     <td><input type="text" name="direccion_ip" value="<?= htmlspecialchars($row['direccion_ip']) ?>" class="form-control" /></td>
                     <td><input type="text" name="usuario_maquina" value="<?= htmlspecialchars($row['usuario_maquina']) ?>" class="form-control" /></td>

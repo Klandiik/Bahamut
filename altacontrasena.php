@@ -17,7 +17,7 @@ try {
 
         // Preparar y ejecutar el INSERT
         $sentenciaInsert = $conexion->prepare("INSERT INTO usuarios (nombre, contrasena, correo, ) VALUES (?, ?, ?)");
-        $sentenciaInsert->bind_param("ssss", $nombre, $contrasenaHash, $correo);
+        $sentenciaInsert->bind_param("sss", $nombre, $contrasenaHash, $correo);
 
         if ($sentenciaInsert->execute()) {
             echo "Usuario dado de alta con éxito.";

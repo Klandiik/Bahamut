@@ -58,12 +58,13 @@
 
                             <a href="#">¿Se te olvidó la contraseña?</a>
                         </div>
-                        <form action="registrar.php" method="post">
-                            <input class="boton" type="submit" value="Registrarse">
-                        </form>
                         <div class="registro">
                             <p>¿No tienes una cuenta? <a href="#">Registrate</a></p>
                         </div>
+                        <form action="registrar.php" method="post">
+                            <input class="boton" type="submit" value="Registrarse">
+                        </form>
+                        
                     </form>
             </article>
         </section>

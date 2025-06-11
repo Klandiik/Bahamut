@@ -190,7 +190,7 @@ button{
 .registro{
     color: var(--white-color);
     font-size: var(--smaller-font-size);
-    text-align: center;
+    /*text-align: center;*/
     margin: 25px 0 10px;
     transition: 0.5s ease;
 }

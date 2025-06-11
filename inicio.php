@@ -39,7 +39,7 @@
                             <span class="icon">
                                 <ion-icon name="mail"></ion-icon>
                             </span>
-                            <input type="email" required="required">
+                            <input type="email" name="email" required="required">
                             <label>Email</label>
                             <div class="input-line"></div>
                         </div>
@@ -48,7 +48,7 @@
                             <span class="icon">
                                 <ion-icon name="lock-closed"></ion-icon>
                             </span>
-                            <input type="password" required="required">
+                            <input type="password" name="password" required="required">
                             <label>Contraseña</label>
                             <div class="input-line"></div>
 

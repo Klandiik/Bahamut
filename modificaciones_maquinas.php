@@ -1,5 +1,5 @@
 <?php
-include 'includes/db.php';
+include 'conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
@@ -9,20 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $clave = $_POST['contraseña'];
 
     // Actualiza máquina
-    $stmt = $pdo->prepare("UPDATE maquinas SET nombre = ?, direccion_ip = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE maquinas SET nombre = ?, direccion_ip = ? WHERE id = ?");
     $stmt->execute([$nombre, $ip, $id]);
 
     // Verifica si ya tiene credencial
-    $check = $pdo->prepare("SELECT id FROM credenciales WHERE id_maquina = ?");
+    $check = $conn->prepare("SELECT id FROM credenciales WHERE id_maquina = ?");
     $check->execute([$id]);
     if ($check->fetch()) {
-        $stmt = $pdo->prepare("UPDATE credenciales SET usuario_maquina = ?, contraseña = ? WHERE id_maquina = ?");
+        $stmt = $conn->prepare("UPDATE credenciales SET usuario_maquina = ?, contraseña = ? WHERE id_maquina = ?");
         $stmt->execute([$usuario, $clave, $id]);
     } else {
-        $stmt = $pdo->prepare("INSERT INTO credenciales (id_maquina, usuario_maquina, contraseña) VALUES (?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO credenciales (id_maquina, usuario_maquina, contraseña) VALUES (?, ?, ?)");
         $stmt->execute([$id, $usuario, $clave]);
     }
 
-    header("Location: modificaciones.php");
+    header("Location: modificaciones1.php");
 }
 ?>

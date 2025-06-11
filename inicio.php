@@ -56,7 +56,7 @@
 
                         <div class="recordarcon">
 
-                            <a href="">¿Se te olvidó la contraseña?</a>
+                            <a href="registro_contrasena.php">¿Se te olvidó la contraseña?</a>
                         </div>
                         <div class="registro">
                             <p>¿No tienes una cuenta? <a href="registro.php">Registrate</a></p>

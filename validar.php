@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION["nombre"] = $usuarioDatos["nombre"];
             
             // Redirige a la página principal
-            header("Location: ../index.php");
+            header("Location: principal.php");
             exit();
             
         } else {

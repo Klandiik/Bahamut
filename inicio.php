@@ -20,7 +20,7 @@
 
                 // Verificar si el usuario ya está autenticado
                 if (isset($_SESSION["nombre"])) {
-                    header("Location: ../index.php"); //Redireccionar a la página principal
+                    header("Location: principal.php"); //Redireccionar a la página principal
                     exit();
                 }
                 // Mostrar el formulario de inicio de sesión si no está autenticado
@@ -56,15 +56,15 @@
 
                         <div class="recordarcon">
 
-                            <a href="#">¿Se te olvidó la contraseña?</a>
+                            <a href="">¿Se te olvidó la contraseña?</a>
                         </div>
                         <div class="registro">
-                            <p>¿No tienes una cuenta? <a href="#">Registrate</a></p>
+                            <p>¿No tienes una cuenta? <a href="registro.php">Registrate</a></p>
                         </div>
-                        <form action="registrar.php" method="post">
-                            <input class="boton" type="submit" value="Registrarse">
+                        <form action="validar.php" method="post">
+                            <input class="button" id="btn-registrar" type="submit" value="Conectarme">
                         </form>
-                        
+
                     </form>
             </article>
         </section>
@@ -73,6 +73,27 @@
     </footer>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggle = document.getElementById("input-check");
+            const registrarBtn = document.getElementById("btn-registrar");
+
+            if (toggle && registrarBtn) {
+                toggle.addEventListener("change", () => {
+                    if (toggle.checked) {
+                        registrarBtn.style.background = "var(--light-bacco)";
+                        registrarBtn.style.boxShadow = "0 0 15px var(--light-bacco)";
+                        registrarBtn.style.color = "var(--white-color)";
+                    } else {
+                        registrarBtn.style.background = "var(--white-color)";
+                        registrarBtn.style.boxShadow = "none";
+                        registrarBtn.style.color = "var(--body-color)";
+                    }
+                });
+            }
+        });
+    </script>
+
 </body>
 
 </html>

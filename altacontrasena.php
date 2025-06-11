@@ -1,7 +1,7 @@
 <?php
 try {
     // Conexión
-    $conexion = new mysqli('localhost', 'Admin', 'Clave_00', 'Empresa');
+    $conexion = new mysqli('localhost', 'root', '', 'Bahamut');
     if ($conexion->connect_error) {
         die("Error de conexión: " . $conexion->connect_error);
     }
@@ -11,14 +11,13 @@ try {
         $nombre = $_POST["nombre"];
         $contrasena = $_POST["contrasena"];
         $correo = $_POST["correo"];
-        $telefono = $_POST["telefono"];
 
         // Hashear la contraseña antes de guardarla
         $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
 
         // Preparar y ejecutar el INSERT
-        $sentenciaInsert = $conexion->prepare("INSERT INTO usuarios (nombre, contrasena, correo, telefono) VALUES (?, ?, ?, ?)");
-        $sentenciaInsert->bind_param("ssss", $nombre, $contrasenaHash, $correo, $telefono);
+        $sentenciaInsert = $conexion->prepare("INSERT INTO usuarios (nombre, contrasena, correo, ) VALUES (?, ?, ?)");
+        $sentenciaInsert->bind_param("ssss", $nombre, $contrasenaHash, $correo);
 
         if ($sentenciaInsert->execute()) {
             echo "Usuario dado de alta con éxito.";

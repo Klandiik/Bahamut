@@ -21,9 +21,6 @@
                     <label for="correo">Correo Eléctronico:</label>
                     <input type="email" name="correo" id="correo" required pattern=".*@.*" placeholder="Introduce un correo eléctronico"> 
                     <br>
-                    <label for="telefono">Telefono:</label>
-                    <input type="tel" name="telefono" id="telefono" placeholder="Introduce un número de teléfono (Opcional)">
-                    <br>
                     <input class="boton" type="submit" value="Registrarme">
                 </form>
             </article>

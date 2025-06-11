@@ -27,7 +27,7 @@
                 ?>
                 <br>
                 <div class="login-container">
-                    <form action="#" class="text on" method="post">
+                    <form action="validar.php" class="text on" method="post">
                         <input type="checkbox" class="input-check" id="input-check">
                         <label for="input-check" class="toggle">
                             <span class="text on">On</span>
@@ -39,7 +39,7 @@
                             <span class="icon">
                                 <ion-icon name="mail"></ion-icon>
                             </span>
-                            <input type="email" name="email" required="required">
+                            <input type="email" id="correo_electronico" name="correo_electronico" required="required">
                             <label>Correo</label>
                             <div class="input-line"></div>
                         </div>
@@ -48,7 +48,7 @@
                             <span class="icon">
                                 <ion-icon name="lock-closed"></ion-icon>
                             </span>
-                            <input type="password" name="password" required="required">
+                            <input type="password" id="contrasena" name="contrasena" required="required">
                             <label>Contraseña</label>
                             <div class="input-line"></div>
 

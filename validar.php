@@ -4,7 +4,7 @@ session_start(); //Creamos una sesion
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Obtenemos los datos del formulario con los nuevos nombres
     $correo = $_POST['correo_electronico'];
-    $contrasena = $_POST['contraseña'];
+    $contrasena = $_POST['contrasena'];
 
     try {
         // Establecemos la conexión a la BD
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Preparacion consulta SQL
-        $sentenciaSelect = "SELECT ID_usuario, correo_electronico, contraseña FROM usuarios WHERE correo_electronico = ? AND contraseña = ?";
+        $sentenciaSelect = "SELECT id_rol, correo_electronico, contraseña FROM usuarios WHERE correo_electronico = ? AND contraseña = ?";
         $stmt = $conexion->prepare($sentenciaSelect);
         $stmt->bind_param("ss", $correo, $contrasena);
         $stmt->execute();
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($resultado->num_rows > 0) {
             // Si la contraseña y el correo coinciden, obtenemos el ID del usuario y lo almacenamos en una sesión
             $usuarioDatos = $resultado->fetch_assoc();
-            $_SESSION["ID_usuario"] = $usuarioDatos["ID_usuario"];
+            $_SESSION["id_rol"] = $usuarioDatos["id_rol"];
             $_SESSION["correo_electronico"] = $usuarioDatos["correo_electronico"];
             
             // Redirige a la página principal

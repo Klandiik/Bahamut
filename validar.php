@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     try {
         // Establecemos la conexión a la BD
-        $conexion = new mysqli('localhost', 'Admin', 'Clave_00', 'Empresa');
+        $conexion = new mysqli('localhost', 'root','', 'bahamut');
         // Controlamos los errores 
         if ($conexion->connect_error) {
             die("Error de conexión: " . $conexion->connect_error);

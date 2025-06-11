@@ -3,7 +3,7 @@ session_start(); //Creamos una sesion
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Obtenemos los datos del formulario con los nuevos nombres
-    $usuario = $_POST['nombre_usuario'];
+    $correo = $_POST['correo_electronico'];
     $contrasena = $_POST['contraseña'];
 
     try {
@@ -15,26 +15,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Preparacion consulta SQL
-        $sentenciaSelect = "SELECT ID_usuario, nombre_usuario, contraseña FROM usuarios WHERE nombre_usuario = ? AND contraseña = ?";
+        $sentenciaSelect = "SELECT ID_usuario, correo_electronico, contraseña FROM usuarios WHERE correo_electronico = ? AND contraseña = ?";
         $stmt = $conexion->prepare($sentenciaSelect);
-        $stmt->bind_param("ss", $usuario, $contrasena);
+        $stmt->bind_param("ss", $correo, $contrasena);
         $stmt->execute();
         $resultado = $stmt->get_result();
 
         // Ver si hay resultado
         if ($resultado->num_rows > 0) {
-            // Si la contraseña y el nombre de usuario coinciden, obtenemos el ID del usuario y lo almacenamos en una sesión
+            // Si la contraseña y el correo coinciden, obtenemos el ID del usuario y lo almacenamos en una sesión
             $usuarioDatos = $resultado->fetch_assoc();
             $_SESSION["ID_usuario"] = $usuarioDatos["ID_usuario"];
-            $_SESSION["nombre"] = $usuarioDatos["nombre_usuario"];
+            $_SESSION["correo_electronico"] = $usuarioDatos["correo_electronico"];
             
             // Redirige a la página principal
             header("Location: principal.php");
             exit();
             
         } else {
-            // Si no coincide contraseña y nombre de usuario, mostramos un mensaje de error
-            echo "Error: Nombre de usuario o contraseña incorrectos";
+            // Si no coincide contraseña y correo, mostramos un mensaje de error
+            echo "Error: Correo electrónico o contraseña incorrectos";
             echo '<a href="login.php">Volver a inicio de sesión</a>';
         }
         $conexion->close();

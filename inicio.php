@@ -61,9 +61,7 @@
                         <div class="registro">
                             <p>¿No tienes una cuenta? <a href="registro.php">Registrate</a></p>
                         </div>
-                        <form action="validar.php" method="post">
                             <input class="button" id="btn-registrar" type="submit" value="Conectarme">
-                        </form>
 
                     </form>
             </article>

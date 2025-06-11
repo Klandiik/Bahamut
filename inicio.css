@@ -218,7 +218,7 @@ button{
 
 .login-light{
     position: absolute;
-    top: 0px; /*-123*/
+    top: -270px; /*-123*/
     left: 50%;
     transform: translateX(-50%);
     width: 500px;

@@ -117,6 +117,16 @@ try {
                                     <span class="align-middel">Maquinas</span>
                                 </a>
                             </li>
+                            <li class="sidebar-item">
+                                <a href="producto.php" class="sidebar-link" data-bs-toggle="collapse" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-pc-display" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
+                                    </svg>
+                                    <span class="align-middel"><a href="usuarios.php">Usuarios</a></span>
+                                </a>
+                            </li>
                             <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
                             <li class="sidebar-item">
                                 <a href="producto.php" class="sidebar-link" data-bs-toggle="collapse" aria-expanded="false">
@@ -409,6 +419,7 @@ try {
                         <div class="row">
                             <div class="d-flex w-100">
                                 <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
+                                    <div class="detalles">
                                     <div class="p-0 d-flex flex-fill card-body">
                                         <ul>
                                             <li><h3>Detalles de la máquina: <?= htmlspecialchars($maquina['nombre']) ?></h3></li>
@@ -425,6 +436,7 @@ try {
                                     </div>
                                     <div>
                                         <ol><li><p><a href="conexionesMaquina.php">Volver</a></p></li></ol>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

@@ -9,4 +9,3 @@ if (isset($_SESSION['nombre'])) {
 header('Location: inicio.php');
 exit();
 ?>
-

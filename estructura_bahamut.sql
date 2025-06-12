@@ -17,6 +17,7 @@ CREATE TABLE usuarios (
     contraseña TEXT NOT NULL, 
     correo_electronico VARCHAR(255),
     id_rol INT NOT NULL,
+    imagen varchar(255),
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_usuarios_rol FOREIGN KEY (id_rol) REFERENCES roles(id)
 );
@@ -46,10 +47,10 @@ CREATE TABLE permisos_usuarios_maquinas (
     FOREIGN KEY (id_maquina) REFERENCES maquinas(id) ON DELETE CASCADE
 );
 
-INSERT INTO usuarios (nombre_usuario, contraseña, correo_electronico, id_rol) VALUES
-('admin', 'admin123', 'admin@bahamut.local', 3),
-('usuario1', 'clave123', 'usuario1@bahamut.local', 1),
-('usuario2', 'clave456', 'usuario2@bahamut.local', 2);
+INSERT INTO usuarios (nombre_usuario, contraseña, correo_electronico, id_rol,imagenn) VALUES
+('admin', 'admin123', 'admin@bahamut.local', 3,'adminn.jpeg'),
+('usuario1', 'clave123', 'usuario1@bahamut.local', 1,'usuario1.jpeg'),
+('usuario2', 'clave456', 'usuario2@bahamut.local', 2,'usuario2.jèg');
 
 INSERT INTO maquinas (nombre, direccion_ip, descripcion) VALUES
 ('Servidor 1', '192.168.1.101', 'Producción'),
@@ -72,3 +73,8 @@ INSERT INTO permisos_usuarios_maquinas (id_usuario, id_maquina, nivel_permiso) V
 (3, 2, 'administrar'),
 (3, 3, 'administrar'),
 (3, 4, 'administrar'); 
+
+
+INSERT INTO maquinas (nombre, direccion_ip, descripcion) VALUES
+('Servidor 1', '192.168.1.101', 'Marketing'),
+('Servidor 2', '192.168.2.110', 'Producción');

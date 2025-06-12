@@ -1,7 +1,5 @@
 /*tabla*/
-*{
-    /*border: 1px solid black;*/
-}
+
 
 /*TABLA  DE USUARIOS*/
 
@@ -40,4 +38,12 @@
 }
 .contenido {
     width: 100%;
+}
+
+.boton_ver{
+    background-color: rgb(39, 218, 39);
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    border-color: white;
 }

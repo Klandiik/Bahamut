@@ -23,6 +23,7 @@
                     header("Location: index.php"); //Redireccionar a la página principal
                     exit();
                 }
+                
                 // Mostrar el formulario de inicio de sesión si no está autenticado
                 ?>
                 <br>

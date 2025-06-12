@@ -16,11 +16,13 @@ $stmt->execute([':nombre_usuario' => $nombreUsuario]);
 $usuario_id = $stmt->fetchColumn();
 
 if (!$usuario_id) {
-    // Usuario no encontrado en BD, redirigir o manejar error
     header("Location: inicio.php");
     exit;
 }
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -395,151 +397,197 @@ if (!$usuario_id) {
                         <div class="d-flex w-100">
                             <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
                                 <div class="p-0 d-flex flex-fill card-body">
-                                    <?php
-                                    // Verificar el rol del usuario
-                                    $sqlRol = "SELECT id_rol FROM usuarios WHERE id = :id";
-                                    $stmtRol = $conn->prepare($sqlRol);
-                                    $stmtRol->execute([':id' => $usuario_id]);
-                                    $rol = $stmtRol->fetchColumn();
+                                        <?php
+                                        // Verificar el rol del usuario
+                                        $sqlRol = "SELECT id_rol FROM usuarios WHERE id = :id";
+                                        $stmtRol = $conn->prepare($sqlRol);
+                                        $stmtRol->execute([':id' => $usuario_id]);
+                                        $rol = $stmtRol->fetchColumn();
 
-                                    echo "<div class='contenido'>";
+                                        echo "<div class='contenido'>";
 
-                                    // Consultar según el rol del usuario
-                                    if ($rol == 3) { // Administrador
-                                        $sql = "SELECT u.nombre_usuario, m.id AS id_maquina, m.nombre AS maquina, c.usuario_maquina, c.contraseña
+                                        // Consultar según el rol del usuario, incluyendo direccion_ip en todas
+                                        if ($rol == 3) { // Administrador
+                                            $sql = "SELECT u.nombre_usuario, m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, c.usuario_maquina, c.contraseña
             FROM usuarios u
             JOIN permisos_usuarios_maquinas pum ON pum.id_usuario = u.id
             JOIN maquinas m ON m.id = pum.id_maquina
             JOIN credenciales c ON c.id_maquina = m.id";
-                                    } elseif ($rol == 2) { // Usuario con permisos específicos
-                                        echo "<h2>Credenciales de máquinas permitidas</h2>";
-                                        $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, c.usuario_maquina, c.contraseña
+                                        } elseif ($rol == 2) { // Usuario con permisos específicos
+                                            echo "<h2>Credenciales de máquinas permitidas</h2>";
+                                            $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, c.usuario_maquina, c.contraseña
             FROM permisos_usuarios_maquinas pum
             JOIN maquinas m ON m.id = pum.id_maquina
             JOIN credenciales c ON c.id_maquina = m.id
             WHERE pum.id_usuario = :id AND pum.nivel_permiso = 'ver_credenciales'";
-                                    } else { // Usuario normal
-                                        echo "<h2>Máquinas con permiso</h2>";
-                                        $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, m.descripcion
+                                        } else { // Usuario normal
+                                            echo "<h2>Máquinas con permiso</h2>";
+                                            $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, m.descripcion
             FROM permisos_usuarios_maquinas pum
             JOIN maquinas m ON m.id = pum.id_maquina
             WHERE pum.id_usuario = :id";
-                                    }
-
-                                    // Preparar y ejecutar la consulta correspondiente
-                                    try {
-                                        $stmt = $conn->prepare($sql);
-
-                                        if ($rol == 3) {
-                                            $stmt->execute();
-                                        } else {
-                                            $stmt->execute([':id' => $usuario_id]);
                                         }
 
-                                        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                        try {
+                                            $stmt = $conn->prepare($sql);
 
-                                        if ($resultados) {
-                                            echo "<table class='tabla_resultados'>";
-                                            echo "<thead>
-                <tr>
-                    <th>Usuario</th>
-                    <th>Address</th>
-                    <th>Hostname</th>
-                    <th>Contraseña</th>
-                    <th>Acciones</th>
-                </tr>
-              </thead>";
-                                            echo "<tbody>";
-
-                                            foreach ($resultados as $fila) {
-                                                echo "<tr>";
-                                                // Mostrar columnas normales excepto para acciones
-                                                // Asumiendo que los índices son: nombre_usuario / maquina / usuario_maquina / contraseña / dirección_ip / descripción según rol
-                                                // Vamos a mostrar dinámicamente para no romper con los distintos roles
-                                    
-                                                // Por ejemplo, mostrar las columnas en orden, excepto la última (Acciones)
-                                                // Para cada fila recorremos todo menos el id_maquina que usaremos para botones
-                                    
-                                                foreach ($fila as $key => $valor) {
-                                                    if ($key !== 'id_maquina') {
-                                                        echo "<td>" . htmlspecialchars($valor) . "</td>";
-                                                    }
-                                                }
-
-                                                // Botones de acción con id_maquina
-                                                $id_maquina = $fila['id_maquina'];
-                                                echo "<td>
-                    <a href='detallesMaquina.php?id=$id_maquina' class='btn btn-info' style='margin-right:5px;'>Ver</a>
-                    <a href='conectar.php?id=$id_maquina' class='btn btn-success'>Conectar</a>
-                  </td>";
-
-                                                echo "</tr>";
+                                            if ($rol == 3) {
+                                                $stmt->execute();
+                                            } else {
+                                                $stmt->execute([':id' => $usuario_id]);
                                             }
 
-                                            echo "</tbody>";
-                                            echo "</table>";
-                                        } else {
-                                            echo "<p>No hay datos para mostrar.</p>";
+                                            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                            if ($resultados) {
+                                                if ($rol == 3 || $rol == 2) {
+                                                    echo "<table class='tabla_resultados'>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Address</th>
+                            <th>Hostname</th>
+                            <th>Usuario Máquina</th>
+                            <th>Contraseña</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+                                                } else {
+                                                    echo "<table class='tabla_resultados'>
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>Hostname</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+                                                }
+
+                                                foreach ($resultados as $index => $fila) {
+                                                    echo "<tr>";
+
+                                                    if ($rol == 3 || $rol == 2) {
+                                                        echo "<td>" . htmlspecialchars($fila['nombre_usuario'] ?? '') . "</td>";
+                                                        echo "<td>" . htmlspecialchars($fila['direccion_ip'] ?? '') . "</td>";
+                                                        echo "<td>" . htmlspecialchars($fila['maquina'] ?? '') . "</td>";
+                                                        echo "<td>" . htmlspecialchars($fila['usuario_maquina'] ?? '') . "</td>";
+
+                                                        // Contraseña con botón VER
+                                                        $password = htmlspecialchars($fila['contraseña'] ?? '');
+                                                        echo "<td>
+                        <span id='pass{$index}' style='display:none;'>{$password}</span>
+                        <button id='btn{$index}' onclick='verPassword({$index})' class='boton_ver'>VER</button>
+                        <span id='timer{$index}' style='margin-left:10px; display:none; color:#a41515;'></span>
+                      </td>";
+                                                    } else {
+                                                        echo "<td>" . htmlspecialchars($fila['direccion_ip'] ?? '') . "</td>";
+                                                        echo "<td>" . htmlspecialchars($fila['maquina'] ?? '') . "</td>";
+                                                        echo "<td>" . htmlspecialchars($fila['descripcion'] ?? '') . "</td>";
+                                                    }
+
+                                                    $id_maquina = $fila['id_maquina'];
+                                                    echo "<td>
+                    <a href='detallesMaquina.php?id=$id_maquina' class='btn btn-info' style='margin-right:5px;'>Ver</a>
+                    <a href='descargar_rdp.php?id=$id_maquina' class='btn btn-success'>Conectar</a>
+                  </td>";
+
+                                                    echo "</tr>";
+                                                }
+
+                                                echo "</tbody></table>";
+                                            } else {
+                                                echo "<p>No hay datos para mostrar.</p>";
+                                            }
+                                        } catch (PDOException $e) {
+                                            echo "Error al ejecutar la consulta: " . $e->getMessage();
                                         }
-                                    } catch (PDOException $e) {
-                                        echo "Error al ejecutar la consulta: " . $e->getMessage();
-                                    }
 
-                                    echo "</div>";
-                                    ?>
+                                        echo "</div>";
+                                        ?>
+
+                                        <script>
+                                            function verPassword(index) {
+                                                const passSpan = document.getElementById(`pass${index}`);
+                                                const btn = document.getElementById(`btn${index}`);
+                                                const timer = document.getElementById(`timer${index}`);
+
+                                                let seconds = 5;
+                                                timer.textContent = `Ocultando en ${seconds}s`;
+                                                timer.style.display = "inline";
+                                                passSpan.style.display = "inline";
+                                                btn.style.display = "none";
+
+                                                const interval = setInterval(() => {
+                                                    seconds--;
+                                                    if (seconds > 0) {
+                                                        timer.textContent = `Ocultando en ${seconds}s`;
+                                                    } else {
+                                                        clearInterval(interval);
+                                                        passSpan.style.display = "none";
+                                                        btn.style.display = "inline";
+                                                        timer.style.display = "none";
+                                                    }
+                                                }, 1000);
+                                            }
+                                        </script>
 
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <footer class="footer bg-white py-3">
-                <div class="container-fluid">
-                    <div class="text-muted row">
-                        <div class="text-start d-flex col-6">
-                            <ul class="list-inline mb-0">
-                                <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
-                                <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
-                                <li class="list-inline-item"><a href="#" class="text-muted">Política de privacidad</a>
-                                </li>
-                                <li class="list-inline-item"><a href="#" class="text-muted">Términos y condiciones</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="text-end col-6">
-                            <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
-                                    class="text-muted">DataSphere</a></p>
+                <footer class="footer bg-white py-3">
+                    <div class="container-fluid">
+                        <div class="text-muted row">
+                            <div class="text-start d-flex col-6">
+                                <ul class="list-inline mb-0">
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Política de
+                                            privacidad</a>
+                                    </li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Términos y
+                                            condiciones</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="text-end col-6">
+                                <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
+                                        class="text-muted">DataSphere</a></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-        integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-        crossorigin="anonymous"></script>
-    <script src="js/navegador.js"></script>
-    <script>
-        const toggle = document.getElementById('toggle');
-        const sidebar = document.querySelector('.sidebar');
-        const main = document.querySelector('.main');
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
+            integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
+            crossorigin="anonymous"></script>
+        <script src="js/navegador.js"></script>
+        <script>
+            const toggle = document.getElementById('toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const main = document.querySelector('.main');
 
-        toggle.addEventListener('click', function () {
-            sidebar.classList.toggle('collapsed');
-        })
+            toggle.addEventListener('click', function () {
+                sidebar.classList.toggle('collapsed');
+            })
 
-    </script>
+        </script>
 </body>
 
 </html>

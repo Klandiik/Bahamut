@@ -8,19 +8,38 @@ try {
         exit;
     }
 
+
     $nombreUsuario = $_SESSION['nombre'];
+    $idUsuario = $_SESSION['usuario_id'];
+    $isAdmin = (isset($_SESSION['rol_usuario']) && $_SESSION['rol_usuario'] === 'administrador');
 
-    // Obtener el id del usuario
-    $sql = "SELECT id FROM usuarios WHERE nombre_usuario = :nombre_usuario";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([':nombre_usuario' => $nombreUsuario]);
-    $usuario_id = $stmt->fetchColumn();
+    // Obtener usuarios (todos si es admin, solo él mismo si no)
+    $usuarios = [];
 
-    if (!$usuario_id) {
-        // Usuario no encontrado en BD, redirigir o manejar error
-        header("Location: inicio.php");
-        exit;
+    if ($isAdmin) {
+        $sql = "SELECT u.id, u.nombre_usuario, u.correo_electronico, u.contraseña, u.creado_en, r.nombre AS rol
+            FROM usuarios u
+            JOIN roles r ON u.id_rol = r.id";
+        $stmt = $conn->prepare($sql);
+    } else {
+        $sql = "SELECT u.id, u.nombre_usuario, u.correo_electronico, u.contraseña, u.creado_en, r.nombre AS rol
+            FROM usuarios u
+            JOIN roles r ON u.id_rol = r.id
+            WHERE u.id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $idUsuario, PDO::PARAM_INT);
     }
+
+    $stmt->execute();
+    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //imagen
+    $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
+
+    $sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
+    $stmtImagen = $conn->prepare($sqlImagen);
+    $stmtImagen->execute([':id' => $usuario_id]);
+    $imagenUsuario = $stmtImagen->fetchColumn();
     ?>
 
     <!DOCTYPE html>
@@ -310,8 +329,7 @@ try {
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                        <img src="img/usuarios/admin.jpeg" alt="admin"
-                                            class="avatar img-fluid rounded-circle me-1" width="40" height="40">
+                                    <img src="img/usuarios/<?php $imagenUsuario ?>" width="10" height="10">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>
@@ -383,88 +401,79 @@ try {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="d-flex w-100">
-                                <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
-                                    <div class="p-0 d-flex flex-fill card-body">
-                                        <?php
-                                        // Verificar el rol del usuario
-                                        $sqlRol = "SELECT id_rol FROM usuarios WHERE id = :id";
-                                        $stmtRol = $conn->prepare($sqlRol);
-                                        $stmtRol->execute([':id' => $usuario_id]);
-                                        $rol = $stmtRol->fetchColumn();
+                            <div class="w-100">
+                                <div class="illustration card border-0 w-100" style="background-color: #e0eafc;">
+                                    <div class="card-body w-100">
+                                        <div class="usuarios-container w-100">
+                                            <div class="contenido" style="overflow-x: auto; width: 100%;">
+                                                <table class="tabla_resultados w-100">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Nombre</th>
+                                                            <th>Correo</th>
+                                                            <th>Rol</th>
+                                                            <th>Creado en</th>
+                                                            <th>Password</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($usuarios as $index => $u): ?>
+                                                            <tr>
+                                                                <td><?= htmlspecialchars($u['id']) ?></td>
+                                                                <td><?= htmlspecialchars($u['nombre_usuario']) ?></td>
+                                                                <td><?= htmlspecialchars($u['correo_electronico']) ?></td>
+                                                                <td><?= htmlspecialchars($u['rol']) ?></td>
+                                                                <td><?= htmlspecialchars($u['creado_en']) ?></td>
+                                                                <td>
+                                                                    <span id="pass<?= $index ?>" style="display: none;">
+                                                                        <?= htmlspecialchars($u['contraseña']) ?>
+                                                                    </span>
+                                                                    <button id="btn<?= $index ?>"
+                                                                        onclick="verPassword(<?= $index ?>)"
+                                                                        class="boton_ver">VER</button>
+                                                                    <span id="timer<?= $index ?>"
+                                                                        style="margin-left: 10px; display: none; color: #a41515;"></span>
+                                                                </td>
 
-                                        echo "<div class='contenido'>";
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
-                                        // Consultar según el rol del usuario
-                                        if ($rol == 3) { // Administrador
-                                            $sql = "SELECT u.nombre_usuario, m.nombre AS maquina, c.usuario_maquina, c.contraseña
-                            FROM usuarios u
-                            JOIN permisos_usuarios_maquinas pum ON pum.id_usuario = u.id
-                            JOIN maquinas m ON m.id = pum.id_maquina
-                            JOIN credenciales c ON c.id_maquina = m.id";
-                                        } elseif ($rol == 2) { // Usuario con permisos específicos
-                                            echo "<h2>Credenciales de máquinas permitidas</h2>";
-                                            $sql = "SELECT m.nombre AS maquina, c.usuario_maquina, c.contraseña
-                            FROM permisos_usuarios_maquinas pum
-                            JOIN maquinas m ON m.id = pum.id_maquina
-                            JOIN credenciales c ON c.id_maquina = m.id
-                            WHERE pum.id_usuario = :id AND pum.nivel_permiso = 'ver_credenciales'";
-                                        } else { // Usuario normal
-                                            echo "<h2>Máquinas con permiso</h2>";
-                                            $sql = "SELECT m.nombre AS maquina, m.direccion_ip, m.descripcion
-                            FROM permisos_usuarios_maquinas pum
-                            JOIN maquinas m ON m.id = pum.id_maquina
-                            WHERE pum.id_usuario = :id";
-                                        }
+                                            <script>
+                                                function verPassword(index) {
+                                                    const passSpan = document.getElementById(`pass${index}`);
+                                                    const btn = document.getElementById(`btn${index}`);
+                                                    const timer = document.getElementById(`timer${index}`);
 
-                                        // Preparar y ejecutar la consulta correspondiente
-                                        try {
-                                            $stmt = $conn->prepare($sql);
+                                                    let seconds = 5;
+                                                    timer.textContent = `Ocultando en ${seconds}s`;
+                                                    timer.style.display = "inline";
+                                                    passSpan.style.display = "inline";
+                                                    btn.style.display = "none";
 
-                                            // Solo pasamos el parámetro si la consulta lo requiere
-                                            if ($rol == 3) {
-                                                $stmt->execute(); // Para el administrador no se pasa parámetro
-                                            } else {
-                                                $stmt->execute([':id' => $usuario_id]); // Para otros roles, pasamos el parámetro :id
-                                            }
-
-                                            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                            // Mostrar los resultados en una tabla
-                                            if ($resultados) {
-                                                echo "<table class='tabla_resultados'>";
-                                                echo "<thead>
-                                <tr>
-                                    <th>Usuario</th>
-                                    <th>Address</th>
-                                    <th>Hostname</th>
-                                    <th>Contraseña</th>
-                                </tr>
-                              </thead>";
-                                                echo "<tbody>";
-                                                foreach ($resultados as $fila) {
-                                                    echo "<tr>";
-                                                    foreach ($fila as $valor) {
-                                                        echo "<td>$valor</td>";
-                                                    }
-                                                    echo "</tr>";
+                                                    const interval = setInterval(() => {
+                                                        seconds--;
+                                                        if (seconds > 0) {
+                                                            timer.textContent = `Ocultando en ${seconds}s`;
+                                                        } else {
+                                                            clearInterval(interval);
+                                                            passSpan.style.display = "none";
+                                                            btn.style.display = "inline";
+                                                            timer.style.display = "none";
+                                                        }
+                                                    }, 1000);
                                                 }
-                                                echo "</tbody>";
-                                                echo "</table>";
-                                            } else {
-                                                echo "<p>No hay datos para mostrar.</p>";
-                                            }
-                                        } catch (PDOException $e) {
-                                            echo "Error al ejecutar la consulta: " . $e->getMessage();
-                                        }
+                                            </script>
 
-                                        echo "</div>";
-                                        ?>
-
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 

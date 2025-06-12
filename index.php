@@ -1,6 +1,9 @@
 <?php
 try {
+    include 'conexion.php';
     session_start();
+
+
 
     if (!isset($_SESSION['nombre'])) {
         header("Location: inicio.php");
@@ -8,6 +11,57 @@ try {
     }
 
     $nombreUsuario = $_SESSION['nombre'];
+
+    
+
+    // Verificamos si es administrador
+    $isAdmin = (isset($_SESSION['rol_usuario']) && $_SESSION['rol_usuario'] === 'administrador');
+
+    // Usuarios por rol (todos ven gráfico, admin ve todos, otros solo su rol)
+    if ($isAdmin) {
+        $sqlUsuarios = "SELECT r.nombre AS rol, COUNT(u.id) AS cantidad
+                    FROM usuarios u
+                    JOIN roles r ON u.id_rol = r.id
+                    GROUP BY r.nombre";
+        $stmtUsuarios = $conn->prepare($sqlUsuarios);
+        $stmtUsuarios->execute();
+        $usuariosData = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
+
+        $labelsUsuarios = array_column($usuariosData, 'rol');
+        $valoresUsuarios = array_column($usuariosData, 'cantidad');
+    } else {
+        // Para usuarios normales mostramos solo su propio rol y cantidad 1
+        $labelsUsuarios = [$_SESSION['rol_usuario']];
+        $valoresUsuarios = [1];
+    }
+
+    // Máquinas por descripción (admin ve todo, usuario solo sus máquinas)
+    if ($isAdmin) {
+        $sqlMaquinas = "SELECT descripcion AS tipo, COUNT(*) AS cantidad FROM maquinas GROUP BY descripcion";
+        $stmtMaquinas = $conn->prepare($sqlMaquinas);
+    } else {
+        $sqlMaquinas = "SELECT m.descripcion AS tipo, COUNT(*) AS cantidad
+                    FROM maquinas m
+                    INNER JOIN permisos_usuarios_maquinas p ON m.id = p.id_maquina
+                    WHERE p.id_usuario = :id_usuario
+                    GROUP BY m.descripcion";
+        $stmtMaquinas = $conn->prepare($sqlMaquinas);
+        $stmtMaquinas->bindParam(':id_usuario', $_SESSION['id_usuario'], PDO::PARAM_INT);
+    }
+    $stmtMaquinas->execute();
+    $maquinasData = $stmtMaquinas->fetchAll(PDO::FETCH_ASSOC);
+
+    $labelsMaquinas = array_column($maquinasData, 'tipo');
+    $valoresMaquinas = array_column($maquinasData, 'cantidad');
+
+//imagen
+$usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
+    
+$sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
+$stmtImagen = $conn->prepare($sqlImagen);
+$stmtImagen->execute([':id' => $usuario_id]);
+$imagenUsuario = $stmtImagen->fetchColumn();
+//
     ?>
 
     <!DOCTYPE html>
@@ -22,6 +76,24 @@ try {
             integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>
+            body {
+                font-family: sans-serif;
+                text-align: center;
+            }
+
+            .chart-container {
+                width: 30%;
+                display: inline-block;
+                margin: 30px auto;
+            }
+
+            h1,
+            h2 {
+                margin: 20px;
+            }
+        </style>
     </head>
 
     <body>
@@ -65,7 +137,7 @@ try {
                                         <path fill-rule="evenodd"
                                             d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5z" />
                                     </svg>
-                                    <span class="align-middel"><a href="conexionesMaquinas.php">Conexiones</a></span>
+                                    <span class="align-middel"><a href="conexionesMaquina.php">Conexiones</a></span>
                                 </a>
                             </li>
 
@@ -307,8 +379,7 @@ try {
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                        <img src="img/usuarios/admin.jpeg" alt="admin"
-                                            class="avatar img-fluid rounded-circle me-1" width="40" height="40">
+                                        <img src="img/usuarios/<?php $imagenUsuario ?>" width="10" height="10">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>
@@ -350,12 +421,60 @@ try {
                             <div class="d-none d-sm-block col-auto">
                                 <h3>Bienvenido a Titann Fortress</h3>
                             </div>
-                            
+
                         </div>
                         <div class="row">
                             <div class="d-flex w-100">
                                 <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
                                     <div class="p-0 d-flex flex-fill card-body">
+                                        <div class="chart-container">
+                                            <h2>Usuarios por Rol</h2>
+                                            <canvas id="usuariosChart"></canvas>
+                                        </div>
+
+                                        <div class="chart-container">
+                                            <h2>Máquinas por Tipo</h2>
+                                            <canvas id="maquinasChart"></canvas>
+                                        </div>
+
+                                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                                        <script>
+                                            // Gráfico Usuarios
+                                            new Chart(document.getElementById('usuariosChart'), {
+                                                type: 'pie',
+                                                data: {
+                                                    labels: <?= json_encode($labelsUsuarios) ?>,
+                                                    datasets: [{
+                                                        data: <?= json_encode($valoresUsuarios) ?>,
+                                                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0', '#FFCE56', '#9C27B0']
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    plugins: {
+                                                        legend: { position: 'right' }
+                                                    }
+                                                }
+                                            });
+
+                                            // Gráfico Máquinas
+                                            new Chart(document.getElementById('maquinasChart'), {
+                                                type: 'pie',
+                                                data: {
+                                                    labels: <?= json_encode($labelsMaquinas) ?>,
+                                                    datasets: [{
+                                                        data: <?= json_encode($valoresMaquinas) ?>,
+                                                        backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#8BC34A', '#9C27B0']
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    plugins: {
+                                                        legend: { position: 'right' }
+                                                    }
+                                                }
+                                            });
+                                        </script>
 
                                     </div>
                                 </div>

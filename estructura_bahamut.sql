@@ -1,5 +1,7 @@
+CREATE DATABASE bahamut;
+use bahamut;
 CREATE TABLE roles (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     descripcion TEXT
 );
@@ -10,17 +12,17 @@ INSERT INTO roles (nombre, descripcion) VALUES
 ('administrador', 'Acceso total a todo el sistema');
 
 CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
     contraseña TEXT NOT NULL, 
     correo_electronico VARCHAR(255),
     id_rol INT NOT NULL,
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_rol) REFERENCES roles(id)
+    CONSTRAINT fk_usuarios_rol FOREIGN KEY (id_rol) REFERENCES roles(id)
 );
 
 CREATE TABLE maquinas (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     direccion_ip VARCHAR(45) NOT NULL,
     descripcion TEXT,
@@ -28,14 +30,13 @@ CREATE TABLE maquinas (
 );
 
 CREATE TABLE credenciales (
-    id SERIAL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_maquina INT NOT NULL,
     usuario_maquina VARCHAR(100) NOT NULL,
     contraseña TEXT NOT NULL,
     creada_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_maquina) REFERENCES maquinas(id) ON DELETE CASCADE
 );
-
 CREATE TABLE permisos_usuarios_maquinas (
     id_usuario INT NOT NULL,
     id_maquina INT NOT NULL,
@@ -70,4 +71,4 @@ INSERT INTO permisos_usuarios_maquinas (id_usuario, id_maquina, nivel_permiso) V
 (3, 1, 'administrar'),
 (3, 2, 'administrar'),
 (3, 3, 'administrar'),
-(3, 4, 'administrar');
+(3, 4, 'administrar'); 

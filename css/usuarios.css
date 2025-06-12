@@ -4,6 +4,7 @@
 }
 
 /*TABLA  DE USUARIOS*/
+
 .tabla_resultados {
     width: 100%;
     border-collapse: collapse;
@@ -36,4 +37,7 @@
 
 .usu{
     background-color: white;
+}
+.contenido {
+    width: 100%;
 }

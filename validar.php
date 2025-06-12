@@ -1,54 +1,42 @@
 <?php
-session_start(); //Creamos una sesion
+session_start();
+require_once("conexion.php"); // Aquí ya usas PDO correctamente
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Obtenemos los datos del formulario con los nuevos nombres
     $correo = $_POST['correo_electronico'];
     $contrasena = $_POST['contrasena'];
 
     try {
-        // Establecemos la conexión a la BD
-        $conexion = new mysqli('localhost', 'root','', 'bahamut');
-        // Controlamos los errores 
-        if ($conexion->connect_error) {
-            die("Error de conexión: " . $conexion->connect_error);
-        }
-
-        // Preparacion consulta SQL
-        $sentenciaSelect = "SELECT id_rol, correo_electronico, contraseña FROM usuarios WHERE correo_electronico = ? AND contraseña = ?";
-        $stmt = $conexion->prepare($sentenciaSelect);
-        $stmt->bind_param("ss", $correo, $contrasena);
+        // Consulta solo por correo
+        $sql = "SELECT id, nombre_usuario, correo_electronico, contraseña, id_rol FROM usuarios WHERE correo_electronico = :correo";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(":correo", $correo, PDO::PARAM_STR);
         $stmt->execute();
-        $resultado = $stmt->get_result();
 
-        // Ver si hay resultado
-        if ($resultado->num_rows > 0) {
-            // Si la contraseña y el correo coinciden, obtenemos el ID del usuario y lo almacenamos en una sesión
-            $usuarioDatos = $resultado->fetch_assoc();
-            $_SESSION["id_rol"] = $usuarioDatos["id_rol"];
-            $_SESSION["correo_electronico"] = $usuarioDatos["correo_electronico"];
-            
-            // Redirige a la página principal
-            header("Location: principal.php");
-            exit();
-            
+        if ($stmt->rowCount() === 1) {
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Comparar contraseña ingresada con la almacenada (si está en texto plano, será igual)
+            if (password_verify($contrasena, $usuario['contraseña']) || $contrasena === $usuario['contraseña']) {
+                $_SESSION["id_rol"] = $usuario["id_rol"];
+                $_SESSION["correo_electronico"] = $usuario["correo_electronico"];
+                $_SESSION["nombre"] = $usuario["nombre_usuario"];
+                $_SESSION["id_usuario"] = $usuario["id"];
+
+                header("Location: principal.php");
+                exit;
+            } else {
+                echo "Contraseña incorrecta. <a href='login.php'>Volver</a>";
+            }
         } else {
-            // Si no coincide contraseña y correo, mostramos un mensaje de error
-            echo "Error: Correo electrónico o contraseña incorrectos";
-            echo '<a href="login.php">Volver a inicio de sesión</a>';
+            echo "Correo no encontrado. <a href='login.php'>Volver</a>";
         }
-        $conexion->close();
-    
-    } catch (mysqli_sql_exception $excp) {
-        if ($conexion->connect_errno) {
-            die("Falló la conexión: " . $conexion->connect_error);
-        } else {
-            die('Algo ha fallado en la BBDD: ' . $conexion->error);
-        }
+
+    } catch (PDOException $e) {
+        echo "Error en la base de datos: " . $e->getMessage();
     }
 } else {
-    // Si no se ha enviado el formulario, redirige a la página de inicio de sesión
     header("Location: login.php");
-    exit();
+    exit;
 }
 ?>

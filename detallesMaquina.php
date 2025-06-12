@@ -10,7 +10,44 @@ try {
 
     $nombreUsuario = $_SESSION['nombre'];
 
+    // Obtener el id del usuario
+    $sql = "SELECT id FROM usuarios WHERE nombre_usuario = :nombre_usuario";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':nombre_usuario' => $nombreUsuario]);
+    $usuario_id = $stmt->fetchColumn();
+
+    if (!$usuario_id) {
+        // Usuario no encontrado en BD, redirigir o manejar error
+        header("Location: inicio.php");
+        exit;
+    }
+
+    //PARTE DE LA MAQUINA
+    // Validar que viene el parámetro id
+    if (!isset($_GET['id']) || empty($_GET['id'])) {
+        echo "ID de máquina no especificado.";
+        exit;
+    }
+
+    $id_maquina = intval($_GET['id']); // Sanitizar id
+
+
+    // Consulta los datos de la máquina y sus credenciales
+    $sql = "SELECT m.nombre, m.direccion_ip, m.descripcion, c.usuario_maquina, c.contraseña
+                FROM maquinas m
+                LEFT JOIN credenciales c ON c.id_maquina = m.id
+                WHERE m.id = :id";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':id' => $id_maquina]);
+    $maquina = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$maquina) {
+        echo "No se encontró la máquina con ID $id_maquina.";
+        exit;
+    }
     ?>
+
     <!DOCTYPE html>
     <html lang="es">
 
@@ -23,6 +60,7 @@ try {
             integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        <link rel="stylesheet" href="css/usuarios.css">
     </head>
 
     <body>
@@ -77,16 +115,6 @@ try {
                                             d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
                                     </svg>
                                     <span class="align-middel">Maquinas</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link" data-bs-toggle="collapse" aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5z" />
-                                    </svg>
-                                    <span class="align-middel"><a href="usuarios.php">Usuarios</a></span>
                                 </a>
                             </li>
                             <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
@@ -348,7 +376,6 @@ try {
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Gestión de Máquinas y Credenciales</h3>
                             </div>
                             <div class="ms-auto text-end mt-n1 col-auto">
                                 <div class="d-inline me-2 dropdown">
@@ -376,161 +403,32 @@ try {
                                         </a>
                                     </div>
                                 </div>
-                                <button type="button" class="button-icon shadow-sm me-1 btn btn-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                                    </svg>
-                                    <span style="font-size: .9rem;">Agregar maquinas</span>
-                                </button>
-                                <button type="button" class="button-icon shadow-sm me-1 btn btn-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-dash-lg" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
-                                    </svg>
-                                    <span style="font-size: .9rem;">Eliminar maquinas</span>
-                                </button>
+
                             </div>
                         </div>
                         <div class="row">
-                            <div class="d-flex col-xxl-3 col-sm-6">
+                            <div class="d-flex w-100">
                                 <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
                                     <div class="p-0 d-flex flex-fill card-body">
-                                        <div class="g-0 w-100 row">
-                                            <div class="col-6">
-                                                <h4 class="illustration-text p-3 m-1">Bienvenido Admin</h4>
-                                                <p class="mb-0">Supervisión</p>
-                                            </div>
-                                            <div class="align-self-end text-end col-6">
-                                                <img src="img/persona.png" alt="persona" class="img-fluid illustration-img">
-                                            </div>
-                                        </div>
+                                        <ul>
+                                            <li><h3>Detalles de la máquina: <?= htmlspecialchars($maquina['nombre']) ?></h3></li>
+                                            <li><strong>Dirección IP:</strong>
+                                                <?= htmlspecialchars($maquina['direccion_ip']) ?></li>
+                                            <li><strong>Descripción:</strong>
+                                                <?= htmlspecialchars($maquina['descripcion']) ?></li>
+                                            <li><strong>Usuario Máquina:</strong>
+                                                <?= htmlspecialchars($maquina['usuario_maquina']) ?></li>
+                                            <li><strong>Contraseña:</strong> <?= htmlspecialchars($maquina['contraseña']) ?>
+                                            </li>
+                                        </ul>
+
                                     </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de maquinas</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">5</span>
-                                                    <span class="text-muted">MAQUINAS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-pc-display-horizontal"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M1.5 0A1.5 1.5 0 0 0 0 1.5v7A1.5 1.5 0 0 0 1.5 10H6v1H1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5v-1h4.5A1.5 1.5 0 0 0 16 8.5v-7A1.5 1.5 0 0 0 14.5 0zm0 1h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5M12 12.5a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0m2 0a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0M1.5 12h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M1 14.25a.25.25 0 0 1 .25-.25h5.5a.25.25 0 1 1 0 .5h-5.5a.25.25 0 0 1-.25-.25" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de usuarios</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">20</span>
-                                                    <span class="text-muted">USUARIOS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de empresas</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">7</span>
-                                                    <span class="text-muted">EMPRESAS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-                                                        <path
-                                                            d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <ol><li><p><a href="conexionesMaquina.php">Volver</a></p></li></ol>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <table class=" table table-primary">
-                            <thead>
-                                <tr>
-                                    <th>Maquina</th>
-                                    <th>IP</th>
-                                    <th>Usuario</th>
-                                    <th>Contraseñas</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $sql = "SELECT m.id, m.nombre, m.direccion_ip, c.usuario_maquina, c.contraseña
-                            FROM maquinas m
-                            LEFT JOIN credenciales c ON m.id = c.id_maquina
-                            ORDER BY m.id";
-                                $stmt = $conn->query($sql);
-                                foreach ($stmt as $row):
-                                    ?>
-                                    <tr>
-                                        <form method="POST" action="modificaciones_maquinas.php">
-                                            <td><input type="text" name="nombre" value="<?= htmlspecialchars($row['nombre']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="direccion_ip"
-                                                    value="<?= htmlspecialchars($row['direccion_ip']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="usuario_maquina"
-                                                    value="<?= htmlspecialchars($row['usuario_maquina']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="contraseña"
-                                                    value="<?= htmlspecialchars($row['contraseña']) ?>" class="form-control" />
-                                            </td>
-                                            <td>
-                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                <button class="btn btn-sm btn-primary">Guardar</button>
-                                            </td>
-                                        </form>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 

@@ -2,7 +2,7 @@
 session_start();
 try {
     if (!isset($_SESSION['usuario_id'])) {
-        header('Location: modificaciones.php');
+        header('Location: index.php');
         exit();
     }
 

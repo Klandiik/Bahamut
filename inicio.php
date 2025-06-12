@@ -20,7 +20,7 @@
 
                 // Verificar si el usuario ya está autenticado
                 if (isset($_SESSION["nombre"])) {
-                    header("Location: principal.php"); //Redireccionar a la página principal
+                    header("Location: index.php"); //Redireccionar a la página principal
                     exit();
                 }
                 // Mostrar el formulario de inicio de sesión si no está autenticado

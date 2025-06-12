@@ -1,0 +1,39 @@
+/*tabla*/
+*{
+    /*border: 1px solid black;*/
+}
+
+/*TABLA  DE USUARIOS*/
+.tabla_resultados {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tabla_resultados th, .tabla_resultados td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.tabla_resultados th {
+    background-color: #a41515;
+    color: white;
+}
+
+.tabla_resultados tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.tabla_resultados tr:hover {
+    background-color: #ddd;
+}
+
+.lista_usuarios{
+    list-style: none;
+}
+
+
+.usu{
+    background-color: white;
+}

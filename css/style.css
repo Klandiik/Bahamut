@@ -1,0 +1,231 @@
+*{
+    margin: 0;
+    /*border: 1px solid black;*/
+    box-sizing: border-box;
+}
+/*BASE*/
+body, html {
+    height: 100%;
+}
+
+/* Contenedor principal que organiza los elementos */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+
+/* Contenido principal */
+#box1 {
+    flex-grow: 1;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+.lista_usuarios{
+    list-style: none;
+}
+.usu {
+    background-color: gainsboro;
+    text-align: end;
+}
+
+/*MENU lateral */
+aside{
+    width: 100px; 
+    height: 800px;
+    background-color: rgb(172, 0, 0);
+}
+aside ol{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.panel_l{
+    margin-bottom: 50px;
+    /*border-radius: 50px;*/
+}
+
+.panel_u{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.panel_c{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+header ol{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    text-align: end;
+}
+.panel_sup_d{
+    border-radius: 50px;
+    width: 30px;
+    margin: 10px;
+    padding: 0px;
+}
+
+img{
+    width: 70px;
+}
+/* MENU LATERAL COMPLETO */
+#menu {
+    width: 60px; /* Ancho inicial */
+    transition: width 0.3s ease;
+    overflow: hidden;
+    background-color: gainsboro;
+    height: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* Cuando el ratón pasa por encima, el menú se expande */
+#menu:hover {
+    width: 150px; /* Ancho cuando se despliega */
+}
+
+/* Contenedor del logo */
+.mn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Asegura que el logo esté centrado vertical y horizontalmente */
+}
+
+/* Logo */
+#menu .panel_l {
+    width: 100%; /* El logo ocupará el 100% del ancho disponible */
+    height: auto; /* Mantiene la proporción del logo */
+    transition: width 0.3s ease; /* Transición suave */
+    margin: 0; /* Asegura que no haya margen alrededor */
+}
+
+/* Asegura que el logo ocupe el 100% del contenedor cuando el menú se expanda */
+#menu:hover .panel_l {
+    width: 100%; /* Logo ocupa el 100% del contenedor */
+}
+
+/* Iconos dentro del menú */
+#menu .panel_u,
+#menu .panel_c {
+    width: 30px;
+    height: 30px;
+}
+
+/* Etiquetas de texto */
+.menu-label {
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    color: black;
+}
+a{
+    text-decoration: none;
+}
+#menu:hover .menu-label {
+    opacity: 1;
+}
+
+/* Submenús */
+.submenu {
+    flex-direction: column;
+}
+.dropdown {
+    display: none;
+    flex-direction: column;
+    margin-left: 40px;
+    background-color: gainsboro;
+    padding: 5px;
+    border-radius: 6px;
+}
+.submenu:hover .dropdown {
+    display: flex;
+}
+.dropdown li {
+    padding: 5px 10px;
+    font-size: 14px;
+    white-space: nowrap;
+    color: white;
+}
+.dropdown li:hover {
+    background-color: #3c5870;
+}
+
+/*MENU USUARIO*/ 
+.foto_usuario{
+    border-radius: 50px;
+    border: 3px rgb(132, 9, 9) solid;
+}
+/* Submenú que aparece al pasar el ratón */
+.submenu2 {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0; /* Cambié de 'right' a 'left' para que el submenú aparezca a la izquierda */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 200px;
+    padding: 10px;
+    z-index: 100;
+}
+
+/* Estilos del submenú */
+.submenu2 a {
+    padding: 8px;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Estilos del contenedor del logo de usuario */
+.usuario-logo {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* Cuando se pasa el ratón sobre el logo, se muestra el submenú */
+.usuario-logo:hover .submenu2 {
+    display: block;
+}
+
+/* Estilos del submenú con el nombre y foto del usuario */
+.usuario-info {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.usuario-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.usuario-info span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Botón de cierre de sesión */
+.logout-btn {
+    display: block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #f44336;
+    color: white;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.logout-btn:hover {
+    background-color: #d32f2f;
+}
+

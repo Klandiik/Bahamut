@@ -13,13 +13,13 @@
             <article>
                 <form action="altaUsuario.php" method="post">
                     <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" required placeholder="Introduce un nombre de usuario">
+                    <input type="text" name="nombre_usuario" id="nombre_usuario" required placeholder="Introduce un nombre de usuario">
                     <br>
                     <label for="contrasena">Contraseña:</label>
-                    <input type="password" name="contrasena" id="contrasena" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{10,}$" minlength="10" placeholder="Introduce Contraseña">
+                    <input type="password" name="contraseña" id="contraseña" placeholder="Introduce Contraseña">
                     <br>
                     <label for="correo">Correo Eléctronico:</label>
-                    <input type="email" name="correo" id="correo" required pattern=".*@.*" placeholder="Introduce un correo eléctronico"> 
+                    <input type="email" name="correo_electronico" id="correo_electronico" required pattern=".*@.*" placeholder="Introduce un correo eléctronico"> 
                     <br>
                     <input class="boton" type="submit" value="Registrarme">
                 </form>

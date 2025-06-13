@@ -13,16 +13,21 @@
     <main>
         <section>
             <article>
-    <form action="procesar_restablecer.php" method="post">
-        <label for="correo">Correo electrónico:</label>
-        <input type="email" name="correo" id="correo" required placeholder="Tu correo registrado"><br>
+                <form action="altacontrasena.php" method="post">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" required placeholder="Introduce un nombre de usuario">
+                    <br>
 
-        <label for="nueva_contrasena">Nueva contraseña:</label>
-        <input type="password" name="nueva_contrasena" id="nueva_contrasena" required
-               placeholder="Introduce nueva contraseña"><br>
+                    <label for="contrasena">Contraseña:</label>
+                    <input type="password" name="contrasena" id="contrasena" required placeholder="Introduce Contraseña">
+                    <br>
 
-        <input type="submit" value="Actualizar contraseña">
-    </form>
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" name="correo" id="correo" required placeholder="Introduce un correo electrónico"> 
+                    <br>
+
+                    <input class="boton" type="submit" value="Registrarme">
+                </form>
             </article>
         </section>
     </main>

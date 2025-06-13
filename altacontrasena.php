@@ -1,33 +1,40 @@
 <?php
 try {
-    // Conexión
+    // Conexión a la base de datos
     $conexion = new mysqli('localhost', 'root', '', 'Bahamut');
     if ($conexion->connect_error) {
         die("Error de conexión: " . $conexion->connect_error);
     }
 
-    // Verificar que el formulario se envió por POST
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $nombre = $_POST["nombre"];
-        $contrasena = $_POST["contrasena"];
         $correo = $_POST["correo"];
+        $nuevaContrasena = $_POST["nueva_contrasena"];
 
-        // Hashear la contraseña antes de guardarla
-        $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
+        // Hashear la nueva contraseña
+        $nuevaContrasenaHash = password_hash($nuevaContrasena, PASSWORD_DEFAULT);
 
-        // Preparar y ejecutar el INSERT
-        $sentenciaInsert = $conexion->prepare("INSERT INTO usuarios (nombre, contrasena, correo, ) VALUES (?, ?, ?)");
-        $sentenciaInsert->bind_param("sss", $nombre, $contrasenaHash, $correo);
+        // Verificar si el correo existe
+        $verificar = $conexion->prepare("SELECT id FROM usuarios WHERE correo = ?");
+        $verificar->bind_param("s", $correo);
+        $verificar->execute();
+        $resultado = $verificar->get_result();
 
-        if ($sentenciaInsert->execute()) {
-            echo "Usuario dado de alta con éxito.";
-            echo "<br><a href='login.php'>Pulsa aquí para iniciar sesión</a>";
+        if ($resultado->num_rows > 0) {
+            // Actualizar contraseña
+            $actualizar = $conexion->prepare("UPDATE usuarios SET contrasena = ? WHERE correo = ?");
+            $actualizar->bind_param("ss", $nuevaContrasenaHash, $correo);
+
+            if ($actualizar->execute()) {
+                echo "Contraseña actualizada con éxito.";
+                echo "<br><a href='login.php'>Iniciar sesión</a>";
+            } else {
+                echo "Error al actualizar contraseña: " . $actualizar->error;
+            }
         } else {
-            echo "Error al dar de alta al nuevo usuario: " . $sentenciaInsert->error;
-            echo "<br><a href='registrar.php'>¿Desea volver a registrarse?</a>";
+            echo "Correo no encontrado. ¿Está registrado?";
         }
     } else {
-        echo "Acceso no válido.";
+        echo "Acceso inválido.";
     }
 } catch (mysqli_sql_exception $excp) {
     die("Error en la base de datos: " . $excp->getMessage());

@@ -13,23 +13,16 @@
     <main>
         <section>
             <article>
-                <form action="altaUsuario.php" method="post">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" required placeholder="Introduce un nombre de usuario">
-                    <br>
-                    <label for="correo">Correo Eléctronico:</label>
-                    <input type="email" name="correo" id="correo" required pattern=".*@.*"
-                        placeholder="Introduce un correo eléctronico">
+    <form action="procesar_restablecer.php" method="post">
+        <label for="correo">Correo electrónico:</label>
+        <input type="email" name="correo" id="correo" required placeholder="Tu correo registrado"><br>
 
-                    <br>
-                    <label for="contrasena">Contraseña:</label>
-                    <input type="password" name="contrasena" id="contrasena" required
-                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{10,}$" minlength="10"
-                        placeholder="Introduce Contraseña">
-                    <br>
+        <label for="nueva_contrasena">Nueva contraseña:</label>
+        <input type="password" name="nueva_contrasena" id="nueva_contrasena" required
+               placeholder="Introduce nueva contraseña"><br>
 
-                    <input class="boton" type="submit" value="Actualizar">
-                </form>
+        <input type="submit" value="Actualizar contraseña">
+    </form>
             </article>
         </section>
     </main>

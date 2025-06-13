@@ -412,10 +412,9 @@ try {
                                     <a href="#" class="dropdown-item">
                                         Configuraciones y privacidad
                                     </a>
-                                    <a href="#" class="dropdown-item">
-                                        Ayuda
+                                    <a href="desconexion.php" class="dropdown-item">
+                                        Desconectarse
                                     </a>
-                                    <a href="desconexion.php">Desconectarse</a>
                                 </div>
                             </div>
                         </div>

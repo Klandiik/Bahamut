@@ -341,10 +341,9 @@ try {
                                     <a href="#" class="dropdown-item">
                                         Configuraciones y privacidad
                                     </a>
-                                    <a href="#" class="dropdown-item">
-                                        Ayuda
+                                    <a href="desconexion.php" class="dropdown-item">
+                                        Desconectarse
                                     </a>
-                                    <a href="desconexion.php">Desconectarse</a>
                                 </div>
                             </div>
                         </div>
@@ -354,50 +353,7 @@ try {
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Gestión de Máquinas y Credenciales</h3>
-                            </div>
-                            <div class="ms-auto text-end mt-n1 col-auto">
-                                <div class="d-inline me-2 dropdown">
-                                    <button type="button" class="nav-icon bg-white shadow-sm dropdown-toggle btn btn-light"
-                                        aria-expanded="true">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                            class="bi bi-person-gear" viewBox="0 0 16 16">
-                                            <path
-                                                d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
-                                        </svg>
-                                        <span style="font-size: .9rem;">Hoy</span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a href="#" class="dropdown-item">
-                                            Activo
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            Otro Activo
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            Algo más aquí
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            Enlace separado
-                                        </a>
-                                    </div>
-                                </div>
-                                <button type="button" class="button-icon shadow-sm me-1 btn btn-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
-                                    </svg>
-                                    <span style="font-size: .9rem;">Agregar maquinas</span>
-                                </button>
-                                <button type="button" class="button-icon shadow-sm me-1 btn btn-primary">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-dash-lg" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8" />
-                                    </svg>
-                                    <span style="font-size: .9rem;">Eliminar maquinas</span>
-                                </button>
+                                <h3>Gestión de Máquinas y Usuarios</h3>
                             </div>
                         </div>
                         <div class="row">
@@ -496,47 +452,101 @@ try {
                             </div>
                         </div>
 
-                        <table class=" table table-primary">
-                            <thead>
-                                <tr>
-                                    <th>Maquina</th>
-                                    <th>IP</th>
-                                    <th>Usuario</th>
-                                    <th>Contraseñas</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $sql = "SELECT m.id, m.nombre, m.direccion_ip, c.usuario_maquina, c.contraseña
-                            FROM maquinas m
-                            LEFT JOIN credenciales c ON m.id = c.id_maquina
-                            ORDER BY m.id";
-                                $stmt = $conn->query($sql);
-                                foreach ($stmt as $row):
-                                    ?>
-                                    <tr>
-                                        <form method="POST" action="modificaciones_maquinas.php">
-                                            <td><input type="text" name="nombre" value="<?= htmlspecialchars($row['nombre']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="direccion_ip"
-                                                    value="<?= htmlspecialchars($row['direccion_ip']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="usuario_maquina"
-                                                    value="<?= htmlspecialchars($row['usuario_maquina']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="contraseña"
-                                                    value="<?= htmlspecialchars($row['contraseña']) ?>" class="form-control" />
-                                            </td>
-                                            <td>
-                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                <button class="btn btn-sm btn-primary">Guardar</button>
-                                            </td>
-                                        </form>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+    <div class="mb-2 mb-xl-2 row">
+                            <div class="d-none d-sm-block col-auto">
+                                <h3>Máquinas</h3>
+                            </div>
+                        </div>
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>IP</th>
+          <th>Descripción</th>
+          <th>Usuario</th>
+          <th>Contraseña</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $stmt = $conn->query("SELECT m.id, m.nombre, m.direccion_ip,  m.descripcion, c.usuario_maquina, c.contraseña 
+                             FROM maquinas m 
+                             LEFT JOIN credenciales c ON m.id = c.id_maquina");
+        while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)):
+        ?>
+        <tr>
+          <form action="editar_maquina.php" method="post">
+            <input type="hidden" name="id" value="<?= $fila['id'] ?>">
+            <td><input type="text" name="nombre" class="form-control" value="<?= htmlspecialchars($fila['nombre']) ?>"></td>
+            <td><input type="text" name="ip" class="form-control" value="<?= htmlspecialchars($fila['direccion_ip']) ?>"></td>
+            <td><input type="text" name="descripcion" class="form-control" value="<?= htmlspecialchars($fila['descripcion']) ?>"></td>
+            <td><input type="text" name="usuario" class="form-control" value="<?= htmlspecialchars($fila['usuario_maquina']) ?>"></td>
+            <td><input type="text" name="contrasena" class="form-control" value="<?= htmlspecialchars($fila['contraseña']) ?>"></td>
+            <td>
+              <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+              <a href="eliminar_maquina.php?id=<?= $fila['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar esta máquina?')">Eliminar</a>
+            </td>
+          </form>
+        </tr>
+        <?php endwhile; ?>
+        <tr>
+          <form action="agregar_maquina.php" method="post">
+            <td><input type="text" name="nombre" class="form-control" required></td>
+            <td><input type="text" name="ip" class="form-control" required></td>
+            <td><input type="text" name="descripcion" class="form-control" required></td>
+            <td><input type="text" name="usuario" class="form-control" required></td>
+            <td><input type="text" name="contrasena" class="form-control" required></td>
+            <td><button type="submit" class="btn btn-sm btn-success">Agregar</button></td>
+          </form>
+        </tr>
+      </tbody>
+    </table>
+   
+
+  <hr>
+  <div class="mb-2 mb-xl-2 row">
+                            <div class="d-none d-sm-block col-auto">
+                                <h3>Usuarios</h3>
+                            </div>
+                        </div>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Nombre de Usuario</th>
+        <th>Correo Electrónico</th>
+        <th>Contraseña</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+      $stmtUsuarios = $conn->query("SELECT id, nombre_usuario, correo_electronico, contraseña FROM usuarios");
+      while ($usuario = $stmtUsuarios->fetch(PDO::FETCH_ASSOC)):
+      ?>
+      <tr>
+        <form action="editar_usuario.php" method="post">
+          <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
+          <td><input type="text" name="nombre_usuario" class="form-control" value="<?= htmlspecialchars($usuario['nombre_usuario']) ?>"></td>
+          <td><input type="email" name="correo" class="form-control" value="<?= htmlspecialchars($usuario['correo_electronico']) ?>"></td>
+          <td><input type="text" name="contrasena" class="form-control" value="<?= htmlspecialchars($usuario['contraseña']) ?>"></td>
+          <td>
+            <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+            <a href="eliminar_usuario.php?id=<?= $usuario['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
+          </td>
+        </form>
+      </tr>
+      <?php endwhile; ?>
+      <tr>
+        <form action="agregar_usuario.php" method="post">
+          <td><input type="text" name="nombre_usuario" class="form-control" required></td>
+          <td><input type="email" name="correo" class="form-control" required></td>
+          <td><input type="text" name="contrasena" class="form-control" required></td>
+          <td><button type="submit" class="btn btn-sm btn-success">Agregar</button></td>
+        </form>
+      </tr>
+    </tbody>
+  </table>
                     </div>
                 </div>
 

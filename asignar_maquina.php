@@ -16,6 +16,28 @@ try {
     $stmtImagen = $conn->prepare($sqlImagen);
     $stmtImagen->execute([':id' => $usuario_id]);
     $imagenUsuario = $stmtImagen->fetchColumn();
+
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_usuario = $_POST['id_usuario'];
+
+    // Obtener máquinas no asociadas
+    $stmt = $conn->prepare("SELECT id, nombre FROM maquinas 
+                           WHERE id NOT IN (
+                               SELECT id_maquina FROM permisos_usuarios_maquinas WHERE id_usuario = ?
+                           )");
+    $stmt->execute([$id_usuario]);
+    $maquinas_disponibles = $stmt->fetchAll();
+
+    // Si no hay ninguna disponible, redirige con alerta
+    if (empty($maquinas_disponibles)) {
+        echo "<script>
+                alert('El usuario ya tiene todas las máquinas asociadas.');
+                window.location.href = 'permisos.php';
+              </script>";
+        exit;
+    }
+}
     ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -340,10 +362,10 @@ try {
                                     <a href="#" class="dropdown-item">
                                         Configuraciones y privacidad
                                     </a>
-                                    <a href="desconexion.php" class="dropdown-item">
-                                        Desconectarse
+                                    <a href="#" class="dropdown-item">
+                                        Ayuda
                                     </a>
-                                    
+                                    <a href="desconexion.php">Desconectarse</a>
                                 </div>
                             </div>
                         </div>
@@ -353,79 +375,30 @@ try {
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Permisos de Usuarios sobre Máquinas</h3>
+                                <h3>Asignar nueva maquina al usuario: </h3>
                             </div>
                         </div>
 
-                        <table class="table table-bordered">
-  <thead class="table-dark">
-    <tr>
-      <th>Usuario</th>
-      <th>Máquinas asociadas</th>
-      <th>Permiso y acciones</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-    $usuarios = $conn->query("SELECT id, nombre_usuario FROM usuarios")->fetchAll();
-
-    foreach ($usuarios as $usuario):
-      $id_usuario = $usuario['id'];
-      $nombre_usuario = htmlspecialchars($usuario['nombre_usuario']);
-
-      $stmt = $conn->prepare("SELECT p.id_maquina, m.nombre, p.nivel_permiso
-                             FROM permisos_usuarios_maquinas p
-                             JOIN maquinas m ON p.id_maquina = m.id
-                             WHERE p.id_usuario = ?");
-      $stmt->execute([$id_usuario]);
-      $permisos = $stmt->fetchAll();
-    ?>
-    <tr>
-      <td><?= $nombre_usuario ?></td>
-
-      <!-- Celda de máquinas asociadas -->
-      <td>
-        <?php foreach ($permisos as $perm): ?>
-          <div class="mb-2"><?= htmlspecialchars($perm['nombre']) ?></div>
+                       <form action="guardar_asignacion.php" method="post">
+    <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
+    <div class="mb-3">
+      <label for="id_maquina" class="form-label">Máquina disponible:</label>
+      <select name="id_maquina" class="form-select" required>
+        <?php foreach ($maquinas_disponibles as $m): ?>
+          <option value="<?= $m['id'] ?>"><?= htmlspecialchars($m['nombre']) ?></option>
         <?php endforeach; ?>
-      </td>
-
-      <!-- Celda de permisos y botones juntos -->
-      <td>
-        <?php foreach ($permisos as $perm): ?>
-          <form class="d-flex align-items-center mb-2" action="editar_permisos.php" method="post">
-            <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
-            <input type="hidden" name="id_maquina" value="<?= $perm['id_maquina'] ?>">
-
-            <select name="nivel_permiso" class="form-select form-select-sm w-auto me-2">
-              <option value="conectar" <?= $perm['nivel_permiso'] === 'conectar' ? 'selected' : '' ?>>Conectar</option>
-              <option value="ver_credenciales" <?= $perm['nivel_permiso'] === 'ver_credenciales' ? 'selected' : '' ?>>Ver Credenciales</option>
-              <option value="administrar" <?= $perm['nivel_permiso'] === 'administrar' ? 'selected' : '' ?>>Administrar</option>
-            </select>
-
-            <button class="btn btn-sm btn-primary me-2" type="submit">Guardar</button>
-            
-            <!-- Mismo formulario: acción eliminar -->
-            <button class="btn btn-sm btn-danger" type="submit" formaction="eliminar_relacion.php" onclick="return confirm('¿Eliminar esta máquina del usuario?')">
-              Eliminar
-            </button>
-          </form>
-        <?php endforeach; ?>
-      </td>
-
-      <!-- Celda de botón Agregar máquina -->
-      <td>
-        <form action="asignar_maquina.php" method="post">
-          <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
-          <button type="submit" class="btn btn-sm btn-success">Agregar Máquina</button>
-        </form>
-      </td>
-    </tr>
-    <?php endforeach; ?>
-  </tbody>
-</table>
-
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="nivel_permiso" class="form-label">Permiso:</label>
+      <select name="nivel_permiso" class="form-select" required>
+        <option value="conectar">Conectar</option>
+        <option value="ver_credenciales">Ver Credenciales</option>
+        <option value="administrar">Administrar</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Asignar</button>
+  </form>
                     </div>
                 </div>
 

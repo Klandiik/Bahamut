@@ -16,9 +16,9 @@ try {
     // Usuarios por rol (todos ven gráfico, admin ve todos, otros solo su rol)
     if ($isAdmin) {
         $sqlUsuarios = "SELECT r.nombre AS rol, COUNT(u.id) AS cantidad
-                FROM usuarios u
-                JOIN roles r ON u.id_rol = r.id
-                GROUP BY r.nombre";
+            FROM usuarios u
+            JOIN roles r ON u.id_rol = r.id
+            GROUP BY r.nombre";
         $stmtUsuarios = $conn->prepare($sqlUsuarios);
         $stmtUsuarios->execute();
         $usuariosData = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
@@ -37,10 +37,11 @@ try {
         $stmtMaquinas = $conn->prepare($sqlMaquinas);
     } else {
         $sqlMaquinas = "SELECT m.descripcion AS tipo, COUNT(*) AS cantidad
-                FROM maquinas m
-                INNER JOIN permisos_usuarios_maquinas p ON m.id = p.id_maquina
-                WHERE p.id_usuario = :id_usuario
-                GROUP BY m.descripcion";
+            FROM maquinas m
+            INNER JOIN permisos_usuarios_maquinas p ON m.id = p.id_maquina
+            WHERE p.id_usuario = :id_usuario
+            AND p.nivel_permiso != 'ningun permiso'  -- <- filtro agregado aquí
+            GROUP BY m.descripcion";
         $stmtMaquinas = $conn->prepare($sqlMaquinas);
         $stmtMaquinas->bindParam(':id_usuario', $_SESSION['usuario_id'], PDO::PARAM_INT);
     }
@@ -49,6 +50,17 @@ try {
 
     $labelsMaquinas = array_column($maquinasData, 'tipo');
     $valoresMaquinas = array_column($maquinasData, 'cantidad');
+
+    // Si no tiene máquinas asignadas (filtrando los 'ningun permiso')
+    if (empty($labelsMaquinas)) {
+        $labelsMaquinas = ['Sin asignar'];
+        $valoresMaquinas = [0.01];
+        $coloresMaquinas = ['#95a5a6'];  // gris para sin asignar
+    } else {
+        $coloresMaquinas = ['#FFCE56', '#FF6384', '#36A2EB', '#8BC34A', '#9C27B0'];
+    }
+
+
 
     // Imagen
     $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
@@ -433,44 +445,42 @@ try {
 
                                         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                                         <script>
+                                            // Gráfico Usuarios
+                                            new Chart(document.getElementById('usuariosChart'), {
+                                                type: 'pie',
+                                                data: {
+                                                    labels: <?= json_encode($labelsUsuarios) ?>,
+                                                    datasets: [{
+                                                        data: <?= json_encode($valoresUsuarios) ?>,
+                                                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0', '#FFCE56', '#9C27B0']
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    plugins: {
+                                                        legend: { position: 'right' }
+                                                    }
+                                                }
+                                            });
 
-                                        // Gráfico Usuarios
-                                        new Chart(document.getElementById('usuariosChart'), {
-                                        type: 'pie',
-                                        data: {
-                                        labels: <?= json_encode($labelsUsuarios) ?>,
-                                        datasets: [{
-                                        data: <?= json_encode($valoresUsuarios) ?>,
-                                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0', '#FFCE56', '#9C27B0']
-                                        }]
-                                        },
-                                        options: {
-                                        responsive: true,
-                                        plugins: {
-                                        legend: { position: 'right' }
-                                        }
-                                        }
-                                        });
-
-                                        // Gráfico Máquinas
-                                        new Chart(document.getElementById('maquinasChart'), {
-                                        type: 'pie',
-                                        data: {
-                                        labels: <?= json_encode($labelsMaquinas) ?>,
-                                        datasets: [{
-                                        data: <?= json_encode($valoresMaquinas) ?>,
-                                        backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#8BC34A', '#9C27B0']
-                                        }]
-                                        },
-                                        options: {
-                                        responsive: true,
-                                        plugins: {
-                                        legend: { position: 'right' }
-                                        }
-                                        }
-                                        });
+                                            // Gráfico Máquinas
+                                            new Chart(document.getElementById('maquinasChart'), {
+                                                type: 'pie',
+                                                data: {
+                                                    labels: <?= json_encode($labelsMaquinas) ?>,
+                                                    datasets: [{
+                                                        data: <?= json_encode($valoresMaquinas) ?>,
+                                                        backgroundColor: <?= json_encode($coloresMaquinas) ?>
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    plugins: {
+                                                        legend: { position: 'right' }
+                                                    }
+                                                }
+                                            });
                                         </script>
-
                                     </div>
                                 </div>
                             </div>

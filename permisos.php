@@ -435,12 +435,15 @@ try {
                                                         ver_credenciales</option>
                                                     <option <?= $row['nivel_permiso'] === 'administrar' ? 'selected' : '' ?>>
                                                         administrar</option>
+                                                    <option <?= $row['nivel_permiso'] === 'ningun_permiso' ? 'selected' : '' ?>>
+                                                        ningun permiso</option>
                                                 </select>
                                             </td>
                                             <td>
                                                 <input type="hidden" name="id_usuario" value="<?= $row['id_usuario'] ?>">
                                                 <input type="hidden" name="id_maquina" value="<?= $row['id_maquina'] ?>">
                                                 <button class="btn btn-sm btn-success">Actualizar</button>
+                                                <button class="botonesL">+</button>
                                             </td>
                                         </form>
                                     </tr>

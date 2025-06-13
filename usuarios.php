@@ -8,10 +8,12 @@ try {
         exit;
     }
 
-
     $nombreUsuario = $_SESSION['nombre'];
     $idUsuario = $_SESSION['usuario_id'];
-    $isAdmin = (isset($_SESSION['rol_usuario']) && $_SESSION['rol_usuario'] === 'administrador');
+    $rolUsuario = $_SESSION['rol_usuario'];
+
+    $isAdmin = ($rolUsuario === 'administrador');
+    $tienePermisoPassword = ($rolUsuario === 'usuario_permisos' || $isAdmin);
 
     // Obtener usuarios (todos si es admin, solo él mismo si no)
     $usuarios = [];
@@ -33,7 +35,7 @@ try {
     $stmt->execute();
     $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-   //imagen
+    //imagen
     $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
 
     $sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
@@ -82,7 +84,7 @@ try {
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link" >
+                                <a href="producto.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-globe" viewBox="0 0 16 16">
                                         <path
@@ -93,7 +95,7 @@ try {
                             </li>
                             <li class="sidebar-header">Servicios</li>
                             <li class="sidebar-item">
-                                <a href="conexionesMaquina.php" class="sidebar-link" >
+                                <a href="conexionesMaquina.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
@@ -103,7 +105,7 @@ try {
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link" >
+                                <a href="producto.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-pc-display" viewBox="0 0 16 16">
                                         <path
@@ -113,7 +115,7 @@ try {
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="usuarios.php" class="sidebar-link" >
+                                <a href="usuarios.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
@@ -124,7 +126,7 @@ try {
                             </li>
                             <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
                             <li class="sidebar-item">
-                                <a href="modificaciones.php" class="sidebar-link" >
+                                <a href="modificaciones.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-gear-fill" viewBox="0 0 16 16">
                                         <path
@@ -134,7 +136,7 @@ try {
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="permisos.php" class="sidebar-link" >
+                                <a href="permisos.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-person-gear" viewBox="0 0 16 16">
                                         <path
@@ -147,7 +149,7 @@ try {
                     </div>
                 </div>
                 <div class="sidebar-item logout-item">
-                    <a href="desconexion.php" class="sidebar-link" >
+                    <a href="desconexion.php" class="sidebar-link">
                         <i class="bi bi-box-arrow-left width=24 height=24"></i>
                         <span class="align-middle">Desconectarse</span>
                     </a>
@@ -340,7 +342,7 @@ try {
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                    <img src="img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
+                                        <img src="img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>
@@ -420,118 +422,121 @@ try {
                                                 <table class="tabla_resultados w-100">
                                                     <thead>
                                                         <tr>
-                                                            <th>ID</th>
                                                             <th>Nombre</th>
                                                             <th>Correo</th>
                                                             <th>Rol</th>
                                                             <th>Creado en</th>
-                                                            <th>Password</th>
+                                                            <?php if ($tienePermisoPassword): ?>
+                                                                <th>Password</th>
+                                                            <?php endif; ?>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <?php foreach ($usuarios as $index => $u): ?>
                                                             <tr>
-                                                                <td><?= htmlspecialchars($u['id']) ?></td>
                                                                 <td><?= htmlspecialchars($u['nombre_usuario']) ?></td>
                                                                 <td><?= htmlspecialchars($u['correo_electronico']) ?></td>
                                                                 <td><?= htmlspecialchars($u['rol']) ?></td>
                                                                 <td><?= htmlspecialchars($u['creado_en']) ?></td>
-                                                                <td>
-                                                                    <span id="pass<?= $index ?>" style="display: none;">
-                                                                        <?= htmlspecialchars($u['contraseña']) ?>
-                                                                    </span>
-                                                                    <button id="btn<?= $index ?>"
-                                                                        onclick="verPassword(<?= $index ?>)"
-                                                                        class="boton_ver">VER</button>
-                                                                    <span id="timer<?= $index ?>"
-                                                                        style="margin-left: 10px; display: none; color: #a41515;"></span>
-                                                                </td>
-
+                                                                <?php if ($tienePermisoPassword): ?>
+                                                                    <td>
+                                                                        <span id="pass<?= $index ?>" style="display: none;">
+                                                                            <?= htmlspecialchars($u['contraseña']) ?>
+                                                                        </span>
+                                                                        <button id="btn<?= $index ?>"
+                                                                            onclick="verPassword(<?= $index ?>)"
+                                                                            class="boton_ver">VER</button>
+                                                                        <span id="timer<?= $index ?>"
+                                                                            style="margin-left: 10px; display: none; color: #a41515;"></span>
+                                                                    </td>
+                                                                <?php endif; ?>
                                                             </tr>
                                                         <?php endforeach; ?>
                                                     </tbody>
                                                 </table>
+
+                                                <!-- JavaScript para mostrar la contraseña -->
+                                                <script>
+                                                    function verPassword(index) {
+                                                        const passSpan = document.getElementById(`pass${index}`);
+                                                        const btn = document.getElementById(`btn${index}`);
+                                                        const timer = document.getElementById(`timer${index}`);
+
+                                                        let seconds = 5;
+                                                        timer.textContent = `Ocultando en ${seconds}s`;
+                                                        timer.style.display = "inline";
+                                                        passSpan.style.display = "inline";
+                                                        btn.style.display = "none";
+
+                                                        const interval = setInterval(() => {
+                                                            seconds--;
+                                                            if (seconds > 0) {
+                                                                timer.textContent = `Ocultando en ${seconds}s`;
+                                                            } else {
+                                                                clearInterval(interval);
+                                                                passSpan.style.display = "none";
+                                                                btn.style.display = "inline";
+                                                                timer.style.display = "none";
+                                                            }
+                                                        }, 1000);
+                                                    }
+                                                </script>
+
                                             </div>
-
-                                            <script>
-                                                function verPassword(index) {
-                                                    const passSpan = document.getElementById(`pass${index}`);
-                                                    const btn = document.getElementById(`btn${index}`);
-                                                    const timer = document.getElementById(`timer${index}`);
-
-                                                    let seconds = 5;
-                                                    timer.textContent = `Ocultando en ${seconds}s`;
-                                                    timer.style.display = "inline";
-                                                    passSpan.style.display = "inline";
-                                                    btn.style.display = "none";
-
-                                                    const interval = setInterval(() => {
-                                                        seconds--;
-                                                        if (seconds > 0) {
-                                                            timer.textContent = `Ocultando en ${seconds}s`;
-                                                        } else {
-                                                            clearInterval(interval);
-                                                            passSpan.style.display = "none";
-                                                            btn.style.display = "inline";
-                                                            timer.style.display = "none";
-                                                        }
-                                                    }, 1000);
-                                                }
-                                            </script>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
+
+                    <footer class="footer bg-white py-3">
+                        <div class="container-fluid">
+                            <div class="text-muted row">
+                                <div class="text-start d-flex col-6">
+                                    <ul class="list-inline mb-0">
+                                        <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
+                                        <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
+                                        <li class="list-inline-item"><a href="#" class="text-muted">Política de
+                                                privacidad</a>
+                                        </li>
+                                        <li class="list-inline-item"><a href="#" class="text-muted">Términos y
+                                                condiciones</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="text-end col-6">
+                                    <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
+                                            class="text-muted">DataSphere</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
-
-                <footer class="footer bg-white py-3">
-                    <div class="container-fluid">
-                        <div class="text-muted row">
-                            <div class="text-start d-flex col-6">
-                                <ul class="list-inline mb-0">
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Política de privacidad</a>
-                                    </li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Términos y condiciones</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="text-end col-6">
-                                <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
-                                        class="text-muted">DataSphere</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
             </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-            integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-            crossorigin="anonymous"></script>
-        <script src="js/navegador.js"></script>
-        <script>
-            const toggle = document.getElementById('toggle');
-            const sidebar = document.querySelector('.sidebar');
-            const main = document.querySelector('.main');
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+            <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+            <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+            <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
+                integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
+                crossorigin="anonymous"></script>
+            <script src="js/navegador.js"></script>
+            <script>
+                const toggle = document.getElementById('toggle');
+                const sidebar = document.querySelector('.sidebar');
+                const main = document.querySelector('.main');
 
-            toggle.addEventListener('click', function () {
-                sidebar.classList.toggle('collapsed');
-            })
+                toggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('collapsed');
+                })
 
-        </script>
+            </script>
     </body>
 
     </html>

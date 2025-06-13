@@ -1,31 +1,58 @@
 <?php
-try {
-    $conexion = new mysqli('localhost', 'root', '', 'Bahamut');
-    if ($conexion->connect_error) {
-        die("Error de conexión: " . $conexion->connect_error);
-    }
+include 'conexion.php';
+session_start();
 
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $nombre_usuario = $_POST["nombre_usuario"];  
-        $contrasena = $_POST["contraseña"];
-        $correo_electronico = $_POST["correo_electronico"];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre_usuario = $_POST['nombre_usuario'] ?? '';
+    $contrasena = $_POST['contrasena'] ?? ''; // sin la ñ
+    $correo = $_POST['correo_electronico'] ?? '';
+    $id_rol = 1; // Rol por defecto
+    $imagen = $nombre_usuario . '.jpeg';
 
-        $id_rol = 1; // asignar un rol por defecto
+    try {
+        // Hashear la contraseña
+        $hashed_password = $contrasena;
 
-        $sentenciaInsert = $conexion->prepare("INSERT INTO usuarios (nombre_usuario, contraseña, correo_electronico, id_rol) VALUES (?, ?, ?, ?)");
-        $sentenciaInsert->bind_param("sssi", $nombre_usuario, $contrasena, $correo_electronico, $id_rol);
+        // luego usa :contrasena en la consulta:
+        $sql = "INSERT INTO usuarios (nombre_usuario, contraseña, correo_electronico, id_rol, imagen)
+        VALUES (:nombre_usuario, :contrasena, :correo_electronico, :id_rol, :imagen)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([
+            ':nombre_usuario' => $nombre_usuario,
+            ':contrasena' => $hashed_password,
+            ':correo_electronico' => $correo,
+            ':id_rol' => $id_rol,
+            ':imagen' => $imagen
+        ]);
 
-        if ($sentenciaInsert->execute()) {
-            echo "Usuario dado de alta con éxito.";
-            echo "<br><a href='inicio.php'>Pulsa aquí para iniciar sesión</a>";
+        // Obtener ID del nuevo usuario
+        $id_usuario = $conn->lastInsertId();
+
+        // Obtener dinámicamente el ID de la máquina cuyo id = 0
+        $stmtMaquina = $conn->prepare("SELECT id FROM maquinas WHERE id = 0 LIMIT 1");
+        $stmtMaquina->execute();
+        $maquina = $stmtMaquina->fetch(PDO::FETCH_ASSOC);
+
+        if ($maquina && isset($maquina['id'])) {
+            $id_maquina = $maquina['id'];
+
+            // Insertar el permiso por defecto
+            $sqlPermiso = "INSERT INTO permisos_usuarios_maquinas (id_usuario, id_maquina, nivel_permiso)
+                           VALUES (:id_usuario, :id_maquina, :nivel_permiso)";
+            $stmtPermiso = $conn->prepare($sqlPermiso);
+            $stmtPermiso->execute([
+                ':id_usuario' => $id_usuario,
+                ':id_maquina' => $id_maquina,
+                ':nivel_permiso' => 'ningun permiso'
+            ]);
+
+            echo "✅ Usuario creado correctamente con permiso por defecto.";
+            header("Location: inicio.php");
         } else {
-            echo "Error al dar de alta al nuevo usuario: " . $sentenciaInsert->error;
-            echo "<br><a href='registro.php'>¿Desea volver a registrarse?</a>";
+            echo "⚠️ Usuario creado, pero no se encontró la máquina con ID 0 para asignar permiso.";
         }
-    } else {
-        echo "Acceso no válido.";
+    } catch (PDOException $e) {
+        echo "❌ Error: " . $e->getMessage();
     }
-} catch (mysqli_sql_exception $excp) {
-    die("Error en la base de datos: " . $excp->getMessage());
 }
 ?>

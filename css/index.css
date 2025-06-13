@@ -9,10 +9,27 @@
     font-family: "Poppins",serif;
 }
 
+/*IMAGENN USUARIO*/
 .imgUSU{
     width:60px;
     height: 60px;
     border-radius: 40px;
+}
+/*BOTON DE AÑADIR EN MODIFICACIONNES Y USUARIO*/
+.botonesL{
+    border-radius: 40px;
+    background-color: blue;
+    color: white;
+    font-size: 30px;
+    width: 30px;
+}
+.botonesL:hover{
+    border-radius: 40px;
+    background-color: blue;
+    color: white;
+    font-size: 40px;
+    width: 40px;
+    transition: all 2.5s ease
 }
 
 /*pagina detalles*/

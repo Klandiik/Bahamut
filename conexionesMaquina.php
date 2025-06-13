@@ -2,31 +2,47 @@
 include 'conexion.php';
 session_start();
 
-if (!isset($_SESSION['nombre'])) {
+if (!isset($_SESSION['usuario_id'])) {
     header("Location: inicio.php");
     exit;
 }
 
-$nombreUsuario = $_SESSION['nombre'];
+$nombreUsuario = $_SESSION['nombre'] ?? null; // <-- AÑADIDO AQUÍ
+$usuario_id = $_SESSION['usuario_id'];
+$rol = $_SESSION['rol_usuario']; // 'administrador', 'usuario_permisos', etc.
 
-// Obtener el id del usuario
-$sql = "SELECT id FROM usuarios WHERE nombre_usuario = :nombre_usuario";
-$stmt = $conn->prepare($sql);
-$stmt->execute([':nombre_usuario' => $nombreUsuario]);
-$usuario_id = $stmt->fetchColumn();
-
-if (!$usuario_id) {
-    header("Location: inicio.php");
-    exit;
+// Obtener las máquinas según el rol
+if ($rol === 'administrador') {
+    // Admin ve todo, sin filtrar por permisos
+    $sql = "SELECT u.nombre_usuario, m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip,
+                   c.usuario_maquina, c.contraseña
+            FROM maquinas m
+            LEFT JOIN credenciales c ON c.id_maquina = m.id
+            LEFT JOIN permisos_usuarios_maquinas pum ON pum.id_maquina = m.id
+            LEFT JOIN usuarios u ON pum.id_usuario = u.id";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+} else {
+    // Usuarios normales o con permisos específicos
+    $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, m.descripcion,
+                   pum.nivel_permiso, c.usuario_maquina, c.contraseña
+            FROM permisos_usuarios_maquinas pum
+            JOIN maquinas m ON m.id = pum.id_maquina
+            LEFT JOIN credenciales c ON c.id_maquina = m.id
+            WHERE pum.id_usuario = :id_usuario";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':id_usuario' => $usuario_id]);
 }
+
+$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 //imagen
-    $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
+$usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
 
-    $sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
-    $stmtImagen = $conn->prepare($sqlImagen);
-    $stmtImagen->execute([':id' => $usuario_id]);
-    $imagenUsuario = $stmtImagen->fetchColumn();
+$sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
+$stmtImagen = $conn->prepare($sqlImagen);
+$stmtImagen->execute([':id' => $usuario_id]);
+$imagenUsuario = $stmtImagen->fetchColumn();
 ?>
 
 
@@ -49,97 +65,97 @@ if (!$usuario_id) {
     <div class="wrapper w-100 d-flex align-items-start justify-content-between bg-black">
         <!--Navegador Vertical ¡-->
         <nav class="sidebar position-relative">
-                <div class="sidebar-content w-100">
-                    <div class="scrollbar-container h-100 w-100 d-flex justify-content-center flex-column">
-                        <a href="#"
-                            class="sidebar-brand d-flex justify-content-center align-items-center gap-1 py-2 text-center">
-                            <img src="img/logo.png" alt="titan" class="logo">
-                            <span class="align-middel me-3 text-uppercase text-while fw-bold fs-9 p-2">TitanFortress</span>
-                        </a>
-                        <ul class="sidebar-nav position-relative w-100">
-                            <li class="sidebar-header">Navegacion</li>
-                            <li class="sidebar-item">
-                                <a href="index.php" class="sidebar-link">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-house" viewBox="0 0 16 16">
-                                        <path
-                                            d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
-                                    </svg>
-                                    <span class="align-middel">Inicio</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-globe" viewBox="0 0 16 16">
-                                        <path
-                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m7.5-6.923c-.67.204-1.335.82-1.887 1.855A8 8 0 0 0 5.145 4H7.5zM4.09 4a9.3 9.3 0 0 1 .64-1.539 7 7 0 0 1 .597-.933A7.03 7.03 0 0 0 2.255 4zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a7 7 0 0 0-.656 2.5zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5zM8.5 5v2.5h2.99a12.5 12.5 0 0 0-.337-2.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5zM5.145 12q.208.58.468 1.068c.552 1.035 1.218 1.65 1.887 1.855V12zm.182 2.472a7 7 0 0 1-.597-.933A9.3 9.3 0 0 1 4.09 12H2.255a7 7 0 0 0 3.072 2.472M3.82 11a13.7 13.7 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5zm6.853 3.472A7 7 0 0 0 13.745 12H11.91a9.3 9.3 0 0 1-.64 1.539 7 7 0 0 1-.597.933M8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855q.26-.487.468-1.068zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.7 13.7 0 0 1-.312 2.5m2.802-3.5a7 7 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7 7 0 0 0-3.072-2.472c.218.284.418.598.597.933M10.855 4a8 8 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4z" />
-                                    </svg>
-                                    <span class="align-middel">Sobre Nosotros</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-header">Servicios</li>
-                            <li class="sidebar-item">
-                                <a href="conexionesMaquina.php" class="sidebar-link" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5z" />
-                                    </svg>
-                                    <span class="align-middel">Conexiones</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-pc-display" viewBox="0 0 16 16">
-                                        <path
-                                            d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
-                                    </svg>
-                                    <span class="align-middel">Maquinas</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="usuarios.php" class="sidebar-link" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                            d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5z" />
-                                    </svg>
-                                    <span class="align-middel">Usuarios</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
-                            <li class="sidebar-item">
-                                <a href="modificaciones.php" class="sidebar-link" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-gear-fill" viewBox="0 0 16 16">
-                                        <path
-                                            d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
-                                    </svg>
-                                    <span class="align-middel">Modificaciones</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a href="permisos.php" class="sidebar-link" >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                        class="bi bi-person-gear" viewBox="0 0 16 16">
-                                        <path
-                                            d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
-                                    </svg>
-                                    <span class="align-middel">Permisos</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="sidebar-item logout-item">
-                    <a href="desconexion.php" class="sidebar-link" >
-                        <i class="bi bi-box-arrow-left width=24 height=24"></i>
-                        <span class="align-middle">Desconectarse</span>
+            <div class="sidebar-content w-100">
+                <div class="scrollbar-container h-100 w-100 d-flex justify-content-center flex-column">
+                    <a href="#"
+                        class="sidebar-brand d-flex justify-content-center align-items-center gap-1 py-2 text-center">
+                        <img src="img/logo.png" alt="titan" class="logo">
+                        <span class="align-middel me-3 text-uppercase text-while fw-bold fs-9 p-2">TitanFortress</span>
                     </a>
+                    <ul class="sidebar-nav position-relative w-100">
+                        <li class="sidebar-header">Navegacion</li>
+                        <li class="sidebar-item">
+                            <a href="index.php" class="sidebar-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-house" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z" />
+                                </svg>
+                                <span class="align-middel">Inicio</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="producto.php" class="sidebar-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-globe" viewBox="0 0 16 16">
+                                    <path
+                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m7.5-6.923c-.67.204-1.335.82-1.887 1.855A8 8 0 0 0 5.145 4H7.5zM4.09 4a9.3 9.3 0 0 1 .64-1.539 7 7 0 0 1 .597-.933A7.03 7.03 0 0 0 2.255 4zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a7 7 0 0 0-.656 2.5zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5zM8.5 5v2.5h2.99a12.5 12.5 0 0 0-.337-2.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5zM5.145 12q.208.58.468 1.068c.552 1.035 1.218 1.65 1.887 1.855V12zm.182 2.472a7 7 0 0 1-.597-.933A9.3 9.3 0 0 1 4.09 12H2.255a7 7 0 0 0 3.072 2.472M3.82 11a13.7 13.7 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5zm6.853 3.472A7 7 0 0 0 13.745 12H11.91a9.3 9.3 0 0 1-.64 1.539 7 7 0 0 1-.597.933M8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855q.26-.487.468-1.068zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.7 13.7 0 0 1-.312 2.5m2.802-3.5a7 7 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7 7 0 0 0-3.072-2.472c.218.284.418.598.597.933M10.855 4a8 8 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4z" />
+                                </svg>
+                                <span class="align-middel">Sobre Nosotros</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-header">Servicios</li>
+                        <li class="sidebar-item">
+                            <a href="conexionesMaquina.php" class="sidebar-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5z" />
+                                </svg>
+                                <span class="align-middel">Conexiones</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="producto.php" class="sidebar-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-pc-display" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
+                                </svg>
+                                <span class="align-middel">Maquinas</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="usuarios.php" class="sidebar-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H14a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 2 7h5.5V6A1.5 1.5 0 0 1 6 4.5zm-6 8A1.5 1.5 0 0 1 1.5 10h1A1.5 1.5 0 0 1 4 11.5v1A1.5 1.5 0 0 1 2.5 14h-1A1.5 1.5 0 0 1 0 12.5zm6 0A1.5 1.5 0 0 1 7.5 10h1a1.5 1.5 0 0 1 1.5 1.5v1A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1a1.5 1.5 0 0 1-1.5-1.5z" />
+                                </svg>
+                                <span class="align-middel">Usuarios</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
+                        <li class="sidebar-item">
+                            <a href="modificaciones.php" class="sidebar-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-gear-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+                                </svg>
+                                <span class="align-middel">Modificaciones</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="permisos.php" class="sidebar-link">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-person-gear" viewBox="0 0 16 16">
+                                    <path
+                                        d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+                                </svg>
+                                <span class="align-middel">Permisos</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
+            </div>
+            <div class="sidebar-item logout-item">
+                <a href="desconexion.php" class="sidebar-link">
+                    <i class="bi bi-box-arrow-left width=24 height=24"></i>
+                    <span class="align-middle">Desconectarse</span>
+                </a>
+            </div>
+        </nav>
         <div class="main">
             <!--Navegador horizontal ¡-->
             <nav
@@ -402,197 +418,148 @@ if (!$usuario_id) {
                         <div class="d-flex w-100">
                             <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
                                 <div class="p-0 d-flex flex-fill card-body">
-                                        <?php
-                                        // Verificar el rol del usuario
-                                        $sqlRol = "SELECT id_rol FROM usuarios WHERE id = :id";
-                                        $stmtRol = $conn->prepare($sqlRol);
-                                        $stmtRol->execute([':id' => $usuario_id]);
-                                        $rol = $stmtRol->fetchColumn();
+                                    <div class="contenido">
+                                        <h2>Máquinas asignadas</h2>
 
-                                        echo "<div class='contenido'>";
+                                        <?php if ($resultados): ?>
+                                            <table class="tabla_resultados">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Dirección IP</th>
+                                                        <th>Hostname</th>
+                                                        <th>Usuario Máquina</th>
+                                                        <th>Contraseña</th>
+                                                        <th>Acciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($resultados as $i => $m): ?>
+                                                        <tr>
+                                                            <td><?= htmlspecialchars($m['direccion_ip'] ?? '-') ?></td>
+                                                            <td><?= htmlspecialchars($m['maquina'] ?? '-') ?></td>
 
-                                        // Consultar según el rol del usuario, incluyendo direccion_ip en todas
-                                        if ($rol == 3) { // Administrador
-                                            $sql = "SELECT u.nombre_usuario, m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, c.usuario_maquina, c.contraseña
-            FROM usuarios u
-            JOIN permisos_usuarios_maquinas pum ON pum.id_usuario = u.id
-            JOIN maquinas m ON m.id = pum.id_maquina
-            JOIN credenciales c ON c.id_maquina = m.id";
-                                        } elseif ($rol == 2) { // Usuario con permisos específicos
-                                            echo "<h2>Credenciales de máquinas permitidas</h2>";
-                                            $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, c.usuario_maquina, c.contraseña
-            FROM permisos_usuarios_maquinas pum
-            JOIN maquinas m ON m.id = pum.id_maquina
-            JOIN credenciales c ON c.id_maquina = m.id
-            WHERE pum.id_usuario = :id AND pum.nivel_permiso = 'ver_credenciales'";
-                                        } else { // Usuario normal
-                                            echo "<h2>Máquinas con permiso</h2>";
-                                            $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, m.descripcion
-            FROM permisos_usuarios_maquinas pum
-            JOIN maquinas m ON m.id = pum.id_maquina
-            WHERE pum.id_usuario = :id";
-                                        }
+                                                            <?php if ($rol === 'administrador' || (isset($m['nivel_permiso']) && ($m['nivel_permiso'] === 'ver_credenciales' || $m['nivel_permiso'] === 'administrar'))): ?>
+                                                                <td><?= htmlspecialchars($m['usuario_maquina'] ?? '-') ?></td>
+                                                                <td>
+                                                                    <span id="pass<?= $i ?>" style="display: none;">
+                                                                        <?= htmlspecialchars($m['contraseña'] ?? '') ?>
+                                                                    </span>
+                                                                    <button id="btn<?= $i ?>" onclick="verPassword(<?= $i ?>)"
+                                                                        class="boton_ver">VER</button>
+                                                                    <span id="timer<?= $i ?>"
+                                                                        style="margin-left:10px; display:none; color:#a41515;"></span>
+                                                                </td>
+                                                            <?php else: ?>
+                                                                <td colspan="2" style="text-align:center; color: #888;">No
+                                                                    autorizado</td>
+                                                            <?php endif; ?>
 
-                                        try {
-                                            $stmt = $conn->prepare($sql);
+                                                            <td>
+                                                                <a href="detallesMaquina.php?id=<?= htmlspecialchars($m['id_maquina']) ?>"
+                                                                    class="btn btn-info">Ver</a>
 
-                                            if ($rol == 3) {
-                                                $stmt->execute();
-                                            } else {
-                                                $stmt->execute([':id' => $usuario_id]);
-                                            }
+                                                                <?php if (
+                                                                    $rol === 'administrador' ||
+                                                                    (isset($m['nivel_permiso']) &&
+                                                                        ($m['nivel_permiso'] === 'conectar' || $m['nivel_permiso'] === 'administrar')
+                                                                    )
+                                                                ): ?>
+                                                                    <a href="descargar_rdp.php?id=<?= htmlspecialchars($m['id_maquina']) ?>"
+                                                                        class="btn btn-success">Conectar</a>
+                                                                <?php else: ?>
+                                                                    <span class="text-muted">Sin permiso</span>
+                                                                <?php endif; ?>
 
-                                            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                            if ($resultados) {
-                                                if ($rol == 3 || $rol == 2) {
-                                                    echo "<table class='tabla_resultados'>
-                    <thead>
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Address</th>
-                            <th>Hostname</th>
-                            <th>Usuario Máquina</th>
-                            <th>Contraseña</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
-                                                } else {
-                                                    echo "<table class='tabla_resultados'>
-                    <thead>
-                        <tr>
-                            <th>Address</th>
-                            <th>Hostname</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>";
-                                                }
-
-                                                foreach ($resultados as $index => $fila) {
-                                                    echo "<tr>";
-
-                                                    if ($rol == 3 || $rol == 2) {
-                                                        echo "<td>" . htmlspecialchars($fila['nombre_usuario'] ?? '') . "</td>";
-                                                        echo "<td>" . htmlspecialchars($fila['direccion_ip'] ?? '') . "</td>";
-                                                        echo "<td>" . htmlspecialchars($fila['maquina'] ?? '') . "</td>";
-                                                        echo "<td>" . htmlspecialchars($fila['usuario_maquina'] ?? '') . "</td>";
-
-                                                        // Contraseña con botón VER
-                                                        $password = htmlspecialchars($fila['contraseña'] ?? '');
-                                                        echo "<td>
-                        <span id='pass{$index}' style='display:none;'>{$password}</span>
-                        <button id='btn{$index}' onclick='verPassword({$index})' class='boton_ver'>VER</button>
-                        <span id='timer{$index}' style='margin-left:10px; display:none; color:#a41515;'></span>
-                      </td>";
-                                                    } else {
-                                                        echo "<td>" . htmlspecialchars($fila['direccion_ip'] ?? '') . "</td>";
-                                                        echo "<td>" . htmlspecialchars($fila['maquina'] ?? '') . "</td>";
-                                                        echo "<td>" . htmlspecialchars($fila['descripcion'] ?? '') . "</td>";
-                                                    }
-
-                                                    $id_maquina = $fila['id_maquina'];
-                                                    echo "<td>
-                    <a href='detallesMaquina.php?id=$id_maquina' class='btn btn-info' style='margin-right:5px;'>Ver</a>
-                    <a href='descargar_rdp.php?id=$id_maquina' class='btn btn-success'>Conectar</a>
-                  </td>";
-
-                                                    echo "</tr>";
-                                                }
-
-                                                echo "</tbody></table>";
-                                            } else {
-                                                echo "<p>No hay datos para mostrar.</p>";
-                                            }
-                                        } catch (PDOException $e) {
-                                            echo "Error al ejecutar la consulta: " . $e->getMessage();
-                                        }
-
-                                        echo "</div>";
-                                        ?>
-
-                                        <script>
-                                            function verPassword(index) {
-                                                const passSpan = document.getElementById(`pass${index}`);
-                                                const btn = document.getElementById(`btn${index}`);
-                                                const timer = document.getElementById(`timer${index}`);
-
-                                                let seconds = 5;
-                                                timer.textContent = `Ocultando en ${seconds}s`;
-                                                timer.style.display = "inline";
-                                                passSpan.style.display = "inline";
-                                                btn.style.display = "none";
-
-                                                const interval = setInterval(() => {
-                                                    seconds--;
-                                                    if (seconds > 0) {
-                                                        timer.textContent = `Ocultando en ${seconds}s`;
-                                                    } else {
-                                                        clearInterval(interval);
-                                                        passSpan.style.display = "none";
-                                                        btn.style.display = "inline";
-                                                        timer.style.display = "none";
-                                                    }
-                                                }, 1000);
-                                            }
-                                        </script>
-
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        <?php else: ?>
+                                            <p>No hay máquinas asignadas.</p>
+                                        <?php endif; ?>
 
                                     </div>
+
+                                    <script>
+                                        function verPassword(index) {
+                                            const passSpan = document.getElementById(`pass${index}`);
+                                            const btn = document.getElementById(`btn${index}`);
+                                            const timer = document.getElementById(`timer${index}`);
+
+                                            let seconds = 5;
+                                            timer.textContent = `Ocultando en ${seconds}s`;
+                                            timer.style.display = "inline";
+                                            passSpan.style.display = "inline";
+                                            btn.style.display = "none";
+
+                                            const interval = setInterval(() => {
+                                                seconds--;
+                                                if (seconds > 0) {
+                                                    timer.textContent = `Ocultando en ${seconds}s`;
+                                                } else {
+                                                    clearInterval(interval);
+                                                    passSpan.style.display = "none";
+                                                    btn.style.display = "inline";
+                                                    timer.style.display = "none";
+                                                }
+                                            }, 1000);
+                                        }
+                                    </script>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <footer class="footer bg-white py-3">
-                    <div class="container-fluid">
-                        <div class="text-muted row">
-                            <div class="text-start d-flex col-6">
-                                <ul class="list-inline mb-0">
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Política de
-                                            privacidad</a>
-                                    </li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Términos y
-                                            condiciones</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="text-end col-6">
-                                <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
-                                        class="text-muted">DataSphere</a></p>
-                            </div>
+            <footer class="footer bg-white py-3">
+                <div class="container-fluid">
+                    <div class="text-muted row">
+                        <div class="text-start d-flex col-6">
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
+                                <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
+                                <li class="list-inline-item"><a href="#" class="text-muted">Política de
+                                        privacidad</a>
+                                </li>
+                                <li class="list-inline-item"><a href="#" class="text-muted">Términos y
+                                        condiciones</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="text-end col-6">
+                            <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
+                                    class="text-muted">DataSphere</a></p>
                         </div>
                     </div>
-                </footer>
-            </div>
+                </div>
+            </footer>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-            integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-            crossorigin="anonymous"></script>
-        <script src="js/navegador.js"></script>
-        <script>
-            const toggle = document.getElementById('toggle');
-            const sidebar = document.querySelector('.sidebar');
-            const main = document.querySelector('.main');
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
+        integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
+        crossorigin="anonymous"></script>
+    <script src="js/navegador.js"></script>
+    <script>
+        const toggle = document.getElementById('toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const main = document.querySelector('.main');
 
-            toggle.addEventListener('click', function () {
-                sidebar.classList.toggle('collapsed');
-            })
+        toggle.addEventListener('click', function () {
+            sidebar.classList.toggle('collapsed');
+        })
 
-        </script>
+    </script>
 </body>
 
 </html>

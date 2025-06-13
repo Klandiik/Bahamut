@@ -9,7 +9,8 @@ try {
         $correo = $_POST["correo"];
         $nuevaContrasena = $_POST["nueva_contrasena"];
 
-        $nuevaContrasenaHash = password_hash($nuevaContrasena, PASSWORD_DEFAULT);
+        // Guardar la contraseña tal cual, sin hash
+        $contrasenaPlano = $nuevaContrasena;
 
         $verificar = $conexion->prepare("SELECT id FROM usuarios WHERE correo_electronico = ?");
         $verificar->bind_param("s", $correo);
@@ -17,8 +18,8 @@ try {
         $resultado = $verificar->get_result();
 
         if ($resultado->num_rows > 0) {
-            $actualizar = $conexion->prepare("UPDATE usuarios SET contraseña = ? WHERE correo_electronico = ?");
-            $actualizar->bind_param("ss", $nuevaContrasenaHash, $correo);
+            $actualizar = $conexion->prepare("UPDATE usuarios SET `contraseña` = ? WHERE correo_electronico = ?");
+            $actualizar->bind_param("ss", $contrasenaPlano, $correo);
 
             if ($actualizar->execute()) {
                 echo "Contraseña actualizada con éxito.";

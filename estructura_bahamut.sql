@@ -74,7 +74,3 @@ INSERT INTO permisos_usuarios_maquinas (id_usuario, id_maquina, nivel_permiso) V
 (3, 3, 'administrar'),
 (3, 4, 'administrar'); 
 
-
-INSERT INTO maquinas (nombre, direccion_ip, descripcion) VALUES
-('Servidor 1', '192.168.1.101', 'Marketing'),
-('Servidor 2', '192.168.2.110', 'Producción');

@@ -114,7 +114,7 @@ try {
                     </div>
                 </div>
                 <div class="sidebar-item logout-item">
-                    <a href="desconexion.php" class="sidebar-link" aria-expanded="false">
+                    <a href="desconexion.php" class="sidebar-link" >
                         <i class="bi bi-box-arrow-left width=24 height=24"></i>
                         <span class="align-middle">Desconectarse</span>
                     </a>

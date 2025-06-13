@@ -3,8 +3,6 @@ try {
     include 'conexion.php';
     session_start();
 
-
-
     if (!isset($_SESSION['nombre'])) {
         header("Location: inicio.php");
         exit;
@@ -12,17 +10,15 @@ try {
 
     $nombreUsuario = $_SESSION['nombre'];
 
-
-
     // Verificamos si es administrador
     $isAdmin = (isset($_SESSION['rol_usuario']) && $_SESSION['rol_usuario'] === 'administrador');
 
     // Usuarios por rol (todos ven gráfico, admin ve todos, otros solo su rol)
     if ($isAdmin) {
         $sqlUsuarios = "SELECT r.nombre AS rol, COUNT(u.id) AS cantidad
-                    FROM usuarios u
-                    JOIN roles r ON u.id_rol = r.id
-                    GROUP BY r.nombre";
+                FROM usuarios u
+                JOIN roles r ON u.id_rol = r.id
+                GROUP BY r.nombre";
         $stmtUsuarios = $conn->prepare($sqlUsuarios);
         $stmtUsuarios->execute();
         $usuariosData = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
@@ -41,12 +37,12 @@ try {
         $stmtMaquinas = $conn->prepare($sqlMaquinas);
     } else {
         $sqlMaquinas = "SELECT m.descripcion AS tipo, COUNT(*) AS cantidad
-                    FROM maquinas m
-                    INNER JOIN permisos_usuarios_maquinas p ON m.id = p.id_maquina
-                    WHERE p.id_usuario = :id_usuario
-                    GROUP BY m.descripcion";
+                FROM maquinas m
+                INNER JOIN permisos_usuarios_maquinas p ON m.id = p.id_maquina
+                WHERE p.id_usuario = :id_usuario
+                GROUP BY m.descripcion";
         $stmtMaquinas = $conn->prepare($sqlMaquinas);
-        $stmtMaquinas->bindParam(':id_usuario', $_SESSION['id_usuario'], PDO::PARAM_INT);
+        $stmtMaquinas->bindParam(':id_usuario', $_SESSION['usuario_id'], PDO::PARAM_INT);
     }
     $stmtMaquinas->execute();
     $maquinasData = $stmtMaquinas->fetchAll(PDO::FETCH_ASSOC);
@@ -54,14 +50,13 @@ try {
     $labelsMaquinas = array_column($maquinasData, 'tipo');
     $valoresMaquinas = array_column($maquinasData, 'cantidad');
 
-    //imagen
+    // Imagen
     $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
 
     $sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
     $stmtImagen = $conn->prepare($sqlImagen);
     $stmtImagen->execute([':id' => $usuario_id]);
     $imagenUsuario = $stmtImagen->fetchColumn();
-    //
     ?>
 
     <!DOCTYPE html>
@@ -438,41 +433,42 @@ try {
 
                                         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                                         <script>
-                                            // Gráfico Usuarios
-                                            new Chart(document.getElementById('usuariosChart'), {
-                                                type: 'pie',
-                                                data: {
-                                                    labels: <?= json_encode($labelsUsuarios) ?>,
-                                                    datasets: [{
-                                                        data: <?= json_encode($valoresUsuarios) ?>,
-                                                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0', '#FFCE56', '#9C27B0']
-                                                    }]
-                                                },
-                                                options: {
-                                                    responsive: true,
-                                                    plugins: {
-                                                        legend: { position: 'right' }
-                                                    }
-                                                }
-                                            });
 
-                                            // Gráfico Máquinas
-                                            new Chart(document.getElementById('maquinasChart'), {
-                                                type: 'pie',
-                                                data: {
-                                                    labels: <?= json_encode($labelsMaquinas) ?>,
-                                                    datasets: [{
-                                                        data: <?= json_encode($valoresMaquinas) ?>,
-                                                        backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#8BC34A', '#9C27B0']
-                                                    }]
-                                                },
-                                                options: {
-                                                    responsive: true,
-                                                    plugins: {
-                                                        legend: { position: 'right' }
-                                                    }
-                                                }
-                                            });
+                                        // Gráfico Usuarios
+                                        new Chart(document.getElementById('usuariosChart'), {
+                                        type: 'pie',
+                                        data: {
+                                        labels: <?= json_encode($labelsUsuarios) ?>,
+                                        datasets: [{
+                                        data: <?= json_encode($valoresUsuarios) ?>,
+                                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0', '#FFCE56', '#9C27B0']
+                                        }]
+                                        },
+                                        options: {
+                                        responsive: true,
+                                        plugins: {
+                                        legend: { position: 'right' }
+                                        }
+                                        }
+                                        });
+
+                                        // Gráfico Máquinas
+                                        new Chart(document.getElementById('maquinasChart'), {
+                                        type: 'pie',
+                                        data: {
+                                        labels: <?= json_encode($labelsMaquinas) ?>,
+                                        datasets: [{
+                                        data: <?= json_encode($valoresMaquinas) ?>,
+                                        backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#8BC34A', '#9C27B0']
+                                        }]
+                                        },
+                                        options: {
+                                        responsive: true,
+                                        plugins: {
+                                        legend: { position: 'right' }
+                                        }
+                                        }
+                                        });
                                         </script>
 
                                     </div>

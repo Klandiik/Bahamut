@@ -14,19 +14,15 @@
         <section>
             <article>
                 <form action="altacontrasena.php" method="post">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" required placeholder="Introduce un nombre de usuario">
-                    <br>
-
-                    <label for="contrasena">Contraseña:</label>
-                    <input type="password" name="contrasena" id="contrasena" required placeholder="Introduce Contraseña">
-                    <br>
-
                     <label for="correo">Correo Electrónico:</label>
-                    <input type="email" name="correo" id="correo" required placeholder="Introduce un correo electrónico"> 
+                    <input type="email" name="correo" id="correo" required placeholder="Introduce tu correo electrónico">
                     <br>
 
-                    <input class="boton" type="submit" value="Registrarme">
+                    <label for="nueva_contrasena">Nueva Contraseña:</label>
+                    <input type="password" name="nueva_contrasena" id="nueva_contrasena" required placeholder="Introduce nueva contraseña">
+                    <br>
+
+                    <input class="boton" type="submit" value="Actualizar Contraseña">
                 </form>
             </article>
         </section>

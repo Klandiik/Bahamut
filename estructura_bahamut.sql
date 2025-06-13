@@ -47,7 +47,7 @@ CREATE TABLE permisos_usuarios_maquinas (
     FOREIGN KEY (id_maquina) REFERENCES maquinas(id) ON DELETE CASCADE
 );
 
-INSERT INTO usuarios (nombre_usuario, contraseña, correo_electronico, id_rol,imagenn) VALUES
+INSERT INTO usuarios (nombre_usuario, contraseña, correo_electronico, id_rol,imagen) VALUES
 ('admin', 'admin123', 'admin@bahamut.local', 3,'adminn.jpeg'),
 ('usuario1', 'clave123', 'usuario1@bahamut.local', 1,'usuario1.jpeg'),
 ('usuario2', 'clave456', 'usuario2@bahamut.local', 2,'usuario2.jèg');

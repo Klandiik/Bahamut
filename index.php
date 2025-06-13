@@ -12,7 +12,7 @@ try {
 
     $nombreUsuario = $_SESSION['nombre'];
 
-    
+
 
     // Verificamos si es administrador
     $isAdmin = (isset($_SESSION['rol_usuario']) && $_SESSION['rol_usuario'] === 'administrador');
@@ -54,14 +54,14 @@ try {
     $labelsMaquinas = array_column($maquinasData, 'tipo');
     $valoresMaquinas = array_column($maquinasData, 'cantidad');
 
-//imagen
-$usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
-    
-$sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
-$stmtImagen = $conn->prepare($sqlImagen);
-$stmtImagen->execute([':id' => $usuario_id]);
-$imagenUsuario = $stmtImagen->fetchColumn();
-//
+    //imagen
+    $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
+
+    $sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
+    $stmtImagen = $conn->prepare($sqlImagen);
+    $stmtImagen->execute([':id' => $usuario_id]);
+    $imagenUsuario = $stmtImagen->fetchColumn();
+    //
     ?>
 
     <!DOCTYPE html>
@@ -120,7 +120,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link" >
+                                <a href="producto.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-globe" viewBox="0 0 16 16">
                                         <path
@@ -131,7 +131,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                             </li>
                             <li class="sidebar-header">Servicios</li>
                             <li class="sidebar-item">
-                                <a href="conexionesMaquina.php" class="sidebar-link" >
+                                <a href="conexionesMaquina.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
@@ -141,7 +141,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link" >
+                                <a href="producto.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-pc-display" viewBox="0 0 16 16">
                                         <path
@@ -151,7 +151,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="usuarios.php" class="sidebar-link" >
+                                <a href="usuarios.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-diagram-3-fill" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
@@ -162,7 +162,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                             </li>
                             <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
                             <li class="sidebar-item">
-                                <a href="modificaciones.php" class="sidebar-link" >
+                                <a href="modificaciones.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-gear-fill" viewBox="0 0 16 16">
                                         <path
@@ -172,7 +172,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="permisos.php" class="sidebar-link" >
+                                <a href="permisos.php" class="sidebar-link">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                         class="bi bi-person-gear" viewBox="0 0 16 16">
                                         <path
@@ -185,7 +185,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                     </div>
                 </div>
                 <div class="sidebar-item logout-item">
-                    <a href="desconexion.php" class="sidebar-link" >
+                    <a href="desconexion.php" class="sidebar-link">
                         <i class="bi bi-box-arrow-left width=24 height=24"></i>
                         <span class="align-middle">Desconectarse</span>
                     </a>
@@ -378,7 +378,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                        <img src="img/usuarios/<?php $imagenUsuario ?>" width="10" height="10">
+                                        <img src="img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>

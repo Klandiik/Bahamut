@@ -33,13 +33,14 @@ try {
     $stmt->execute();
     $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    //imagen
+   //imagen
     $usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
 
     $sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
     $stmtImagen = $conn->prepare($sqlImagen);
     $stmtImagen->execute([':id' => $usuario_id]);
     $imagenUsuario = $stmtImagen->fetchColumn();
+    //
     ?>
 
     <!DOCTYPE html>
@@ -339,7 +340,7 @@ try {
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                    <img src="img/usuarios/<?php $imagenUsuario ?>" width="10" height="10">
+                                    <img src="img/usuarios/<?= $imagenUsuario ?>" class="imgUSU">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>

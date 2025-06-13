@@ -9,6 +9,13 @@
     font-family: "Poppins",serif;
 }
 
+.imgUSU{
+    width:60px;
+    height: 60px;
+    border-radius: 40px;
+}
+
+/*pagina detalles*/
 .detalles{
     padding:15px;
 }

@@ -9,6 +9,10 @@
     font-family: "Poppins",serif;
 }
 
+.detalles{
+    padding:15px;
+}
+
 :root {
     --color-primary: #202434;
     --color-primary-light: #293042;

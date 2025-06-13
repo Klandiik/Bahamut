@@ -3,8 +3,6 @@ try {
     include 'conexion.php';
     session_start();
 
-
-
     if (!isset($_SESSION['nombre'])) {
         header("Location: inicio.php");
         exit;
@@ -12,56 +10,42 @@ try {
 
     $nombreUsuario = $_SESSION['nombre'];
 
-    
+    // Obtener el id del usuario
+    $sql = "SELECT id FROM usuarios WHERE nombre_usuario = :nombre_usuario";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':nombre_usuario' => $nombreUsuario]);
+    $usuario_id = $stmt->fetchColumn();
 
-    // Verificamos si es administrador
-    $isAdmin = (isset($_SESSION['rol_usuario']) && $_SESSION['rol_usuario'] === 'administrador');
-
-    // Usuarios por rol (todos ven gráfico, admin ve todos, otros solo su rol)
-    if ($isAdmin) {
-        $sqlUsuarios = "SELECT r.nombre AS rol, COUNT(u.id) AS cantidad
-                    FROM usuarios u
-                    JOIN roles r ON u.id_rol = r.id
-                    GROUP BY r.nombre";
-        $stmtUsuarios = $conn->prepare($sqlUsuarios);
-        $stmtUsuarios->execute();
-        $usuariosData = $stmtUsuarios->fetchAll(PDO::FETCH_ASSOC);
-
-        $labelsUsuarios = array_column($usuariosData, 'rol');
-        $valoresUsuarios = array_column($usuariosData, 'cantidad');
-    } else {
-        // Para usuarios normales mostramos solo su propio rol y cantidad 1
-        $labelsUsuarios = [$_SESSION['rol_usuario']];
-        $valoresUsuarios = [1];
+    if (!$usuario_id) {
+        // Usuario no encontrado en BD, redirigir o manejar error
+        header("Location: inicio.php");
+        exit;
     }
 
-    // Máquinas por descripción (admin ve todo, usuario solo sus máquinas)
-    if ($isAdmin) {
-        $sqlMaquinas = "SELECT descripcion AS tipo, COUNT(*) AS cantidad FROM maquinas GROUP BY descripcion";
-        $stmtMaquinas = $conn->prepare($sqlMaquinas);
-    } else {
-        $sqlMaquinas = "SELECT m.descripcion AS tipo, COUNT(*) AS cantidad
-                    FROM maquinas m
-                    INNER JOIN permisos_usuarios_maquinas p ON m.id = p.id_maquina
-                    WHERE p.id_usuario = :id_usuario
-                    GROUP BY m.descripcion";
-        $stmtMaquinas = $conn->prepare($sqlMaquinas);
-        $stmtMaquinas->bindParam(':id_usuario', $_SESSION['id_usuario'], PDO::PARAM_INT);
+    //PARTE DE LA MAQUINA
+    // Validar que viene el parámetro id
+    if (!isset($_GET['id']) || empty($_GET['id'])) {
+        echo "ID de máquina no especificado.";
+        exit;
     }
-    $stmtMaquinas->execute();
-    $maquinasData = $stmtMaquinas->fetchAll(PDO::FETCH_ASSOC);
 
-    $labelsMaquinas = array_column($maquinasData, 'tipo');
-    $valoresMaquinas = array_column($maquinasData, 'cantidad');
+    $id_maquina = intval($_GET['id']); // Sanitizar id
 
-//imagen
-$usuario_id = $_SESSION['usuario_id']; // con "usuario_id", no "id_usuario"
-    
-$sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
-$stmtImagen = $conn->prepare($sqlImagen);
-$stmtImagen->execute([':id' => $usuario_id]);
-$imagenUsuario = $stmtImagen->fetchColumn();
-//
+
+    // Consulta los datos de la máquina y sus credenciales
+    $sql = "SELECT m.nombre, m.direccion_ip, m.descripcion, c.usuario_maquina, c.contraseña
+                FROM maquinas m
+                LEFT JOIN credenciales c ON c.id_maquina = m.id
+                WHERE m.id = :id";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':id' => $id_maquina]);
+    $maquina = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$maquina) {
+        echo "No se encontró la máquina con ID $id_maquina.";
+        exit;
+    }
     ?>
 
     <!DOCTYPE html>
@@ -76,24 +60,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
             integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <style>
-            body {
-                font-family: sans-serif;
-                text-align: center;
-            }
-
-            .chart-container {
-                width: 30%;
-                display: inline-block;
-                margin: 30px auto;
-            }
-
-            h1,
-            h2 {
-                margin: 20px;
-            }
-        </style>
+        <link rel="stylesheet" href="css/usuarios.css">
     </head>
 
     <body>
@@ -140,7 +107,6 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                     <span class="align-middel"><a href="conexionesMaquina.php">Conexiones</a></span>
                                 </a>
                             </li>
-
                             <li class="sidebar-item">
                                 <a href="producto.php" class="sidebar-link" data-bs-toggle="collapse" aria-expanded="false">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -148,7 +114,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                         <path
                                             d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z" />
                                     </svg>
-                                    <span class="align-middel"><a href="">Maquinas</a></span>
+                                    <span class="align-middel">Maquinas</span>
                                 </a>
                             </li>
                             <li class="sidebar-item">
@@ -179,7 +145,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                         <path
                                             d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
                                     </svg>
-                                    <span class="align-middel">Permisos </span>
+                                    <span class="align-middel">Permisos</span>
                                 </a>
                             </li>
                         </ul>
@@ -379,7 +345,8 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                 </span>
                                 <span class="d-none d-sm-inline-block nav-icon" aria-expanded="true">
                                     <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
-                                        <img src="img/usuarios/<?php $imagenUsuario ?>" width="10" height="10">
+                                        <img src="img/usuarios/admin.jpeg" alt="admin"
+                                            class="avatar img-fluid rounded-circle me-1" width="40" height="40">
                                         <span><?= htmlspecialchars($nombreUsuario) ?></span>
                                     </a>
                                 </span>
@@ -419,63 +386,57 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Bienvenido a Titann Fortress</h3>
                             </div>
+                            <div class="ms-auto text-end mt-n1 col-auto">
+                                <div class="d-inline me-2 dropdown">
+                                    <button type="button" class="nav-icon bg-white shadow-sm dropdown-toggle btn btn-light"
+                                        aria-expanded="true">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                            class="bi bi-person-gear" viewBox="0 0 16 16">
+                                            <path
+                                                d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+                                        </svg>
+                                        <span style="font-size: .9rem;">Hoy</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="#" class="dropdown-item">
+                                            Activo
+                                        </a>
+                                        <a href="#" class="dropdown-item">
+                                            Otro Activo
+                                        </a>
+                                        <a href="#" class="dropdown-item">
+                                            Algo más aquí
+                                        </a>
+                                        <a href="#" class="dropdown-item">
+                                            Enlace separado
+                                        </a>
+                                    </div>
+                                </div>
 
+                            </div>
                         </div>
                         <div class="row">
                             <div class="d-flex w-100">
                                 <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
+                                    <div class="detalles">
                                     <div class="p-0 d-flex flex-fill card-body">
-                                        <div class="chart-container">
-                                            <h2>Usuarios por Rol</h2>
-                                            <canvas id="usuariosChart"></canvas>
-                                        </div>
+                                        <ul>
+                                            <li><h3>Detalles de la máquina: <?= htmlspecialchars($maquina['nombre']) ?></h3></li>
+                                            <li><strong>Dirección IP:</strong>
+                                                <?= htmlspecialchars($maquina['direccion_ip']) ?></li>
+                                            <li><strong>Descripción:</strong>
+                                                <?= htmlspecialchars($maquina['descripcion']) ?></li>
+                                            <li><strong>Usuario Máquina:</strong>
+                                                <?= htmlspecialchars($maquina['usuario_maquina']) ?></li>
+                                            <li><strong>Contraseña:</strong> <?= htmlspecialchars($maquina['contraseña']) ?>
+                                            </li>
+                                        </ul>
 
-                                        <div class="chart-container">
-                                            <h2>Máquinas por Tipo</h2>
-                                            <canvas id="maquinasChart"></canvas>
-                                        </div>
-
-                                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                                        <script>
-                                            // Gráfico Usuarios
-                                            new Chart(document.getElementById('usuariosChart'), {
-                                                type: 'pie',
-                                                data: {
-                                                    labels: <?= json_encode($labelsUsuarios) ?>,
-                                                    datasets: [{
-                                                        data: <?= json_encode($valoresUsuarios) ?>,
-                                                        backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0', '#FFCE56', '#9C27B0']
-                                                    }]
-                                                },
-                                                options: {
-                                                    responsive: true,
-                                                    plugins: {
-                                                        legend: { position: 'right' }
-                                                    }
-                                                }
-                                            });
-
-                                            // Gráfico Máquinas
-                                            new Chart(document.getElementById('maquinasChart'), {
-                                                type: 'pie',
-                                                data: {
-                                                    labels: <?= json_encode($labelsMaquinas) ?>,
-                                                    datasets: [{
-                                                        data: <?= json_encode($valoresMaquinas) ?>,
-                                                        backgroundColor: ['#FFCE56', '#FF6384', '#36A2EB', '#8BC34A', '#9C27B0']
-                                                    }]
-                                                },
-                                                options: {
-                                                    responsive: true,
-                                                    plugins: {
-                                                        legend: { position: 'right' }
-                                                    }
-                                                }
-                                            });
-                                        </script>
-
+                                    </div>
+                                    <div>
+                                        <ol><li><p><a href="conexionesMaquina.php">Volver</a></p></li></ol>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -530,7 +491,6 @@ $imagenUsuario = $stmtImagen->fetchColumn();
     </body>
 
     </html>
-
     <?php
 } catch (PDOException $e) {
     die("Error en la conexión a la base de datos: " . $e->getMessage()); // Si ocurre un error, muestra un mensaje adecuado

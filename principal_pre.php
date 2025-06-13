@@ -2,15 +2,16 @@
 session_start();
 try {
     if (!isset($_SESSION['usuario_id'])) {
-        header('Location: modificaciones.php');
+        header('Location: index.php');
         exit();
     }
 
-    $usuario = $_SESSION['usuario'];
+    $usuario = $_SESSION['nombre']; // <-- Cambiado aquí para que coincida con validar.php
     require 'conexion.php'; // Incluimos la conexión correctamente
 
     // Obtener el ID del usuario actual desde la sesión
     $usuario_id = $_SESSION['usuario_id'];
+
     // Consulta para obtener la imagen del usuario
     $sqlImagen = "SELECT imagen FROM usuarios WHERE id = :id";
     $stmtImagen = $conn->prepare($sqlImagen);
@@ -59,7 +60,7 @@ try {
                             <ul class="dropdown">
                                 <li><a href="#">Sub opción 1</a></li>
                                 <li><a href="#">Sub opción 2</a></li>
-                                <li><a "#">Sub opción 3</a></li>
+                                <li><a href="#">Sub opción 3</a></li>
                             </ul>
                         </li>
                     </ol>
@@ -76,18 +77,17 @@ try {
                     </ol>
                 </aside>
 
-
                 <div id="box1">
                     <div class="usu">
                         <ol>
                             <li class="usuario-logo">
                                 <a href="#">
-                                    <img src="img/usuarios/<?php echo $imagenUsuario; ?>" alt="Logo usuario"
-                                        class="foto_usuario">
+                                    <img src="img/usuarios/<?php echo htmlspecialchars($imagenUsuario); ?>"
+                                        alt="Logo usuario" class="foto_usuario">
                                 </a>
                                 <div class="submenu2">
                                     <div class="usuario-info">
-                                        <span>Usuario: <?php echo $usuario; ?></span>
+                                        <span>Usuario: <?php echo htmlspecialchars($usuario); ?></span>
                                     </div>
                                     <form action="desconexion.php" method="post">
                                         <button type="submit" class="logout-btn">Cerrar sesión</button>
@@ -96,7 +96,6 @@ try {
                             </li>
                         </ol>
                     </div>
-
                 </div>
             </div>
         </main>
@@ -110,5 +109,4 @@ try {
 } catch (PDOException $e) {
     die("Error al consultar el rol del usuario: " . $e->getMessage());
 }
-
 ?>

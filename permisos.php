@@ -348,7 +348,7 @@ try {
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Gestión de Máquinas y Credenciales</h3>
+                                <h3>Permisos de Usuarios sobre Máquinas</h3>
                             </div>
                             <div class="ms-auto text-end mt-n1 col-auto">
                                 <div class="d-inline me-2 dropdown">
@@ -394,101 +394,6 @@ try {
                                 </button>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
-                                    <div class="p-0 d-flex flex-fill card-body">
-                                        <div class="g-0 w-100 row">
-                                            <div class="col-6">
-                                                <h4 class="illustration-text p-3 m-1">Bienvenido Admin</h4>
-                                                <p class="mb-0">Supervisión</p>
-                                            </div>
-                                            <div class="align-self-end text-end col-6">
-                                                <img src="img/persona.png" alt="persona" class="img-fluid illustration-img">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de maquinas</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">5</span>
-                                                    <span class="text-muted">MAQUINAS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-pc-display-horizontal"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M1.5 0A1.5 1.5 0 0 0 0 1.5v7A1.5 1.5 0 0 0 1.5 10H6v1H1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5v-1h4.5A1.5 1.5 0 0 0 16 8.5v-7A1.5 1.5 0 0 0 14.5 0zm0 1h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5M12 12.5a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0m2 0a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0M1.5 12h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M1 14.25a.25.25 0 0 1 .25-.25h5.5a.25.25 0 1 1 0 .5h-5.5a.25.25 0 0 1-.25-.25" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de usuarios</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">20</span>
-                                                    <span class="text-muted">USUARIOS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de empresas</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">7</span>
-                                                    <span class="text-muted">EMPRESAS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-                                                        <path
-                                                            d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <table class=" table table-primary">
                             <thead>
@@ -502,32 +407,35 @@ try {
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = "SELECT m.id, m.nombre, m.direccion_ip, c.usuario_maquina, c.contraseña
-                            FROM maquinas m
-                            LEFT JOIN credenciales c ON m.id = c.id_maquina
-                            ORDER BY m.id";
-                                $stmt = $conn->query($sql);
-                                foreach ($stmt as $row):
-                                    ?>
-                                    <tr>
-                                        <form method="POST" action="modificaciones_maquinas.php">
-                                            <td><input type="text" name="nombre" value="<?= htmlspecialchars($row['nombre']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="direccion_ip"
-                                                    value="<?= htmlspecialchars($row['direccion_ip']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="usuario_maquina"
-                                                    value="<?= htmlspecialchars($row['usuario_maquina']) ?>"
-                                                    class="form-control" /></td>
-                                            <td><input type="text" name="contraseña"
-                                                    value="<?= htmlspecialchars($row['contraseña']) ?>" class="form-control" />
-                                            </td>
-                                            <td>
-                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                                                <button class="btn btn-sm btn-primary">Guardar</button>
-                                            </td>
-                                        </form>
-                                    </tr>
+                                    $sql = "SELECT p.id_usuario, p.id_maquina, p.nivel_permiso,
+                                    u.nombre_usuario, u.correo_electronico,
+                                    m.nombre AS maquina
+                                    FROM permisos_usuarios_maquinas p
+                                    JOIN usuarios u ON p.id_usuario = u.id
+                                    JOIN maquinas m ON p.id_maquina = m.id
+                                    ORDER BY u.id, m.id";
+                                    $stmt = $conn->query($sql);
+                                    foreach ($stmt as $row):
+                                ?>
+                                <tr>
+                                    <form method="POST" action="modificaciones_permisosJ.php">
+                                        <td><?= htmlspecialchars($row['nombre_usuario']) ?></td>
+                                        <td><?= htmlspecialchars($row['correo_electronico']) ?></td>
+                                        <td><?= htmlspecialchars($row['maquina']) ?></td>
+                                        <td>
+                                            <select name="nivel_permiso" class="form-select">
+                                                <option <?= $row['nivel_permiso'] === 'conectar' ? 'selected' : '' ?>>conectar</option>
+                                                <option <?= $row['nivel_permiso'] === 'ver_credenciales' ? 'selected' : '' ?>>ver_credenciales</option>
+                                                <option <?= $row['nivel_permiso'] === 'administrar' ? 'selected' : '' ?>>administrar</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="hidden" name="id_usuario" value="<?= $row['id_usuario'] ?>">
+                                            <input type="hidden" name="id_maquina" value="<?= $row['id_maquina'] ?>">
+                                            <button class="btn btn-sm btn-success">Actualizar</button>
+                                        </td>
+                                    </form>
+                                </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>

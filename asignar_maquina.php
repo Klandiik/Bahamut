@@ -22,25 +22,25 @@ try {
 
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_usuario = $_POST['id_usuario'];
+        $id_usuario = $_POST['id_usuario'];
 
-    // Obtener máquinas no asociadas
-    $stmt = $conn->prepare("SELECT id, nombre FROM maquinas 
+        // Obtener máquinas no asociadas
+        $stmt = $conn->prepare("SELECT id, nombre FROM maquinas 
                            WHERE id NOT IN (
                                SELECT id_maquina FROM permisos_usuarios_maquinas WHERE id_usuario = ?
                            )");
-    $stmt->execute([$id_usuario]);
-    $maquinas_disponibles = $stmt->fetchAll();
+        $stmt->execute([$id_usuario]);
+        $maquinas_disponibles = $stmt->fetchAll();
 
-    // Si no hay ninguna disponible, redirige con alerta
-    if (empty($maquinas_disponibles)) {
-        echo "<script>
+        // Si no hay ninguna disponible, redirige con alerta
+        if (empty($maquinas_disponibles)) {
+            echo "<script>
                 alert('El usuario ya tiene todas las máquinas asociadas.');
                 window.location.href = 'permisos.php';
               </script>";
-        exit;
+            exit;
+        }
     }
-}
     ?>
     <!DOCTYPE html>
     <html lang="es">
@@ -59,7 +59,7 @@ try {
     <body>
         <div class="wrapper w-100 d-flex align-items-start justify-content-between bg-black">
             <!--Navegador Vertical ¡-->
-             <!-- Navegador Vertical -->
+            <!-- Navegador Vertical -->
             <nav class="sidebar position-relative">
                 <div class="sidebar-content w-100">
                     <div class="scrollbar-container h-100 w-100 d-flex justify-content-center flex-column">
@@ -80,8 +80,8 @@ try {
                             </li>
 
                             <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link">
-                                    <i class="bi bi-globe"></i>
+                                <a href="sobre_nosotros.php" class="sidebar-link">
+                                    <i class="bi bi-diagram-3-fill"></i>
                                     <span class="align-middle">Sobre Nosotros</span>
                                 </a>
                             </li>
@@ -362,26 +362,26 @@ try {
                             </div>
                         </div>
 
-                       <form action="guardar_asignacion.php" method="post">
-    <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
-    <div class="mb-3">
-      <label for="id_maquina" class="form-label">Máquina disponible:</label>
-      <select name="id_maquina" class="form-select" required>
-        <?php foreach ($maquinas_disponibles as $m): ?>
-          <option value="<?= $m['id'] ?>"><?= htmlspecialchars($m['nombre']) ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="nivel_permiso" class="form-label">Permiso:</label>
-      <select name="nivel_permiso" class="form-select" required>
-        <option value="conectar">Conectar</option>
-        <option value="ver_credenciales">Ver Credenciales</option>
-        <option value="administrar">Administrar</option>
-      </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Asignar</button>
-  </form>
+                        <form action="guardar_asignacion.php" method="post">
+                            <input type="hidden" name="id_usuario" value="<?= $id_usuario ?>">
+                            <div class="mb-3">
+                                <label for="id_maquina" class="form-label">Máquina disponible:</label>
+                                <select name="id_maquina" class="form-select" required>
+                                    <?php foreach ($maquinas_disponibles as $m): ?>
+                                        <option value="<?= $m['id'] ?>"><?= htmlspecialchars($m['nombre']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nivel_permiso" class="form-label">Permiso:</label>
+                                <select name="nivel_permiso" class="form-select" required>
+                                    <option value="conectar">Conectar</option>
+                                    <option value="ver_credenciales">Ver Credenciales</option>
+                                    <option value="administrar">Administrar</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Asignar</button>
+                        </form>
                     </div>
                 </div>
 

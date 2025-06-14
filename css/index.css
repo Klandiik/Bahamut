@@ -9,6 +9,12 @@
     font-family: "Poppins",serif;
 }
 
+/*sobre nosotros*/
+.obras{
+    width: 400px;
+    height: 400px;
+}
+
 /*IMAGENN USUARIO*/
 .imgUSU{
     width:60px;

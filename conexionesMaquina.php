@@ -88,8 +88,8 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                         </li>
 
                         <li class="sidebar-item">
-                            <a href="producto.php" class="sidebar-link">
-                                <i class="bi bi-globe"></i>
+                            <a href="sobre_nosotros.php" class="sidebar-link">
+                                <i class="bi bi-diagram-3-fill"></i>
                                 <span class="align-middle">Sobre Nosotros</span>
                             </a>
                         </li>
@@ -111,7 +111,7 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                         </li>
 
                         <?php if ($isAdmin): ?>
-                            <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?> (Admin)</li>
+                            <li class="sidebar-header"><?= htmlspecialchars($nombreUsuario) ?></li>
 
                             <li class="sidebar-item">
                                 <a href="modificaciones.php" class="sidebar-link">

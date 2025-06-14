@@ -1,11 +1,30 @@
+
 <?php
-include 'conexion.php';  // Ajusta esta ruta si es necesario
+//autor: christian adrian pereira 
+//autor: pedro manuel merino garcia
+//autor: noe jefferson chavarry llerenas
+include 'conexion.php';
 session_start();
 
 if (!isset($_SESSION['nombre'])) {
     header("Location: inicio.php");
     exit;
 }
+
+// Obtener el nombre de usuario desde la sesión
+$nombreUsuario = $_SESSION['nombre'];
+
+// Obtener el ID del usuario logueado
+$stmtUser = $conn->prepare("SELECT id FROM usuarios WHERE nombre_usuario = :nombre");
+$stmtUser->execute([':nombre' => $nombreUsuario]);
+$usuario = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+if (!$usuario) {
+    echo "Usuario no encontrado.";
+    exit;
+}
+
+$id_usuario = $usuario['id'];
 
 if (!isset($_GET['id'])) {
     echo "ID de máquina no especificado.";
@@ -14,12 +33,25 @@ if (!isset($_GET['id'])) {
 
 $id_maquina = (int) $_GET['id'];
 
-// Aquí puedes agregar validación para que el usuario tenga permiso de acceder a esta máquina, si quieres.
+// Verificar que el usuario tenga permiso para conectarse
+$stmtPermiso = $conn->prepare("SELECT nivel_permiso FROM permisos_usuarios_maquinas 
+    WHERE id_usuario = :id_usuario AND id_maquina = :id_maquina");
+$stmtPermiso->execute([
+    ':id_usuario' => $id_usuario,
+    ':id_maquina' => $id_maquina
+]);
 
+$permiso = $stmtPermiso->fetch(PDO::FETCH_ASSOC);
+
+if (!$permiso || !in_array($permiso['nivel_permiso'], ['conectar', 'administrar'])) {
+    echo "No tienes permiso para conectarte a esta máquina.";
+    exit;
+}
+
+// Obtener la IP y el usuario de la máquina
 $sql = "SELECT m.direccion_ip, c.usuario_maquina FROM maquinas m
         LEFT JOIN credenciales c ON c.id_maquina = m.id
         WHERE m.id = :id";
-
 $stmt = $conn->prepare($sql);
 $stmt->execute([':id' => $id_maquina]);
 $info = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -30,7 +62,7 @@ if (!$info) {
 }
 
 $direccion_ip = $info['direccion_ip'];
-$usuario = $info['usuario_maquina'];
+$usuario_maquina = $info['usuario_maquina'];
 
 $rdpContent = <<<RDP
 screen mode id:i:2
@@ -40,7 +72,7 @@ desktopheight:i:720
 session bpp:i:32
 winposstr:s:0,3,0,0,800,600
 full address:s:$direccion_ip
-username:s:$usuario
+username:s:$usuario_maquina
 compression:i:1
 keyboardhook:i:2
 audiocapturemode:i:0
@@ -51,7 +83,7 @@ bandwidthautodetect:i:1
 displayconnectionbar:i:1
 autoreconnection enabled:i:1
 authentication level:i:2
-prompt for credentials:i:0
+prompt for credentials:i:1
 negotiate security layer:i:1
 remoteapplicationmode:i:0
 alternate shell:s:

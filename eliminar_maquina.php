@@ -1,4 +1,7 @@
 <?php
+//autor: christian adrian pereira 
+//autor: pedro manuel merino garcia
+//autor: noe jefferson chavarry llerenas
 include 'conexion.php';
 
 if (isset($_GET['id'])) {

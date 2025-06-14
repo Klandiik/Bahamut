@@ -1,4 +1,7 @@
 <?php
+//autor: christian adrian pereira 
+//autor: pedro manuel merino garcia
+//autor: noe jefferson chavarry llerenas
 session_start();
 require_once("conexion.php"); // tu conexión PDO
 

@@ -1,4 +1,7 @@
 <?php
+//autor: christian adrian pereira 
+//autor: pedro manuel merino garcia
+//autor: noe jefferson chavarry llerenas
 try {
     // Definir la conexión con la base de datos (usando el objeto PDO)
     $conn = new PDO("mysql:host=localhost;dbname=bahamut;charset=utf8", "root", "");

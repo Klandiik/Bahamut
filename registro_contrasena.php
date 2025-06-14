@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="">
+       <meta name="author" content="christian adrian pereira">
+    <meta name="author" content="pedro manuel merino garcia">
+    <meta name="author" content="noe jefferson chavarry llerenas">
     <title>Registrar Usuario</title>
 </head>
 

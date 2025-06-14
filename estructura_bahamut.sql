@@ -14,7 +14,7 @@ CREATE TABLE `credenciales` (
 
 
 INSERT INTO `credenciales` (`id`, `id_maquina`, `usuario_maquina`, `contraseña`, `creada_en`) VALUES
-(1, 1, 'admin_s1', 's1pass', '2025-06-12 10:55:54'),
+(1, 1, 'Administrador', 'TiFor22!!', '2025-06-12 10:55:54'),
 (2, 2, 'admin_s2', 's2pass', '2025-06-12 10:55:54'),
 (3, 3, 'admin_s3', 's3pass', '2025-06-12 10:55:54'),
 (4, 4, 'admin_s4', 's4pass', '2025-06-12 10:55:54');
@@ -31,7 +31,7 @@ CREATE TABLE `maquinas` (
 
 INSERT INTO `maquinas` (`id`, `nombre`, `direccion_ip`, `descripcion`, `creada_en`) VALUES
 (0, 'sin asignar', '0.0.0.0', 'Sin asignar', '2025-06-13 10:41:03'),
-(1, 'Servidor 1', '192.168.1.101', 'Producción', '2025-06-12 10:55:54'),
+(1, 'SERVER-SV-TITFOT', '192.168.0.35', 'Producción', '2025-06-12 10:55:54'),
 (2, 'Servidor 2', '192.168.1.102', 'Pruebas', '2025-06-12 10:55:54'),
 (3, 'Servidor 3', '192.168.1.103', 'Desarrollo', '2025-06-12 10:55:54'),
 (4, 'Servidor 4', '192.168.1.104', 'Respaldo', '2025-06-12 10:55:54'),

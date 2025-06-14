@@ -38,6 +38,9 @@ INSERT INTO `maquinas` (`id`, `nombre`, `direccion_ip`, `descripcion`, `creada_e
 (5, 'Servidor 1', '192.168.1.101', 'Marketing', '2025-06-12 15:24:16'),
 (6, 'Servidor 2', '192.168.2.110', 'Producción', '2025-06-12 15:24:16');
 
+INSERT INTO `maquinas` (`nombre`, `direccion_ip`, `descripcion`,) VALUES
+('sin asignar', '0.0.0.0', 'Sin asignar', ),
+('sin asignar', '0.0.0.0', 'Sin asignar', ),;
 
 
 CREATE TABLE `permisos_usuarios_maquinas` (

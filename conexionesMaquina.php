@@ -10,14 +10,12 @@ if (!isset($_SESSION['usuario_id'])) {
     exit;
 }
 
-$nombreUsuario = $_SESSION['nombre'] ?? null; // <-- AÑADIDO AQUÍ
+$nombreUsuario = $_SESSION['nombre'] ?? null;
 $usuario_id = $_SESSION['usuario_id'];
-$rol = $_SESSION['rol_usuario']; // 'administrador', 'usuario_permisos', etc.
+$rol = $_SESSION['rol_usuario'];
 
-// Obtener las máquinas según el rol
 if ($rol === 'administrador') {
-    // Admin ve todo, sin filtrar por permisos
-    $sql = "SELECT u.nombre_usuario, m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip,
+    $sql = "SELECT u.nombre_usuario, m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, m.puerto,
                    c.usuario_maquina, c.contraseña
             FROM maquinas m
             LEFT JOIN credenciales c ON c.id_maquina = m.id
@@ -26,8 +24,7 @@ if ($rol === 'administrador') {
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 } else {
-    // Usuarios normales o con permisos específicos
-    $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, m.descripcion,
+    $sql = "SELECT m.id AS id_maquina, m.nombre AS maquina, m.direccion_ip, m.puerto, m.descripcion,
                    pum.nivel_permiso, c.usuario_maquina, c.contraseña
             FROM permisos_usuarios_maquinas pum
             JOIN maquinas m ON m.id = pum.id_maquina
@@ -423,91 +420,85 @@ $imagenUsuario = $stmtImagen->fetchColumn();
                                     <div class="contenido">
                                         <h2>Máquinas asignadas</h2>
 
-                                        <?php if ($resultados): ?>
-                                            <table class="tabla_resultados">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Dirección IP</th>
-                                                        <th>Hostname</th>
-                                                        <th>Usuario Máquina</th>
-                                                        <th>Contraseña</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($resultados as $i => $m): ?>
-                                                        <tr>
-                                                            <td><?= htmlspecialchars($m['direccion_ip'] ?? '-') ?></td>
-                                                            <td><?= htmlspecialchars($m['maquina'] ?? '-') ?></td>
+<?php if ($resultados): ?>
+    <table class="tabla_resultados">
+        <thead>
+            <tr>
+                <th>Dirección IP</th>
+                <th>Puerto</th>
+                <th>Hostname</th>
+                <th>Usuario Máquina</th>
+                <th>Contraseña</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($resultados as $i => $m): ?>
+                <tr>
+                    <td><?= htmlspecialchars($m['direccion_ip'] ?? '-') ?></td>
+                    <td><?= htmlspecialchars($m['puerto'] ?? '-') ?></td>
+                    <td><?= htmlspecialchars($m['maquina'] ?? '-') ?></td>
 
-                                                            <?php if ($rol === 'administrador' || (isset($m['nivel_permiso']) && ($m['nivel_permiso'] === 'ver_credenciales' || $m['nivel_permiso'] === 'administrar'))): ?>
-                                                                <td><?= htmlspecialchars($m['usuario_maquina'] ?? '-') ?></td>
-                                                                <td>
-                                                                    <span id="pass<?= $i ?>" style="display: none;">
-                                                                        <?= htmlspecialchars($m['contraseña'] ?? '') ?>
-                                                                    </span>
-                                                                    <button id="btn<?= $i ?>" onclick="verPassword(<?= $i ?>)"
-                                                                        class="boton_ver">VER</button>
-                                                                    <span id="timer<?= $i ?>"
-                                                                        style="margin-left:10px; display:none; color:#a41515;"></span>
-                                                                </td>
-                                                            <?php else: ?>
-                                                                <td colspan="2" style="text-align:center; color: #888;">No
-                                                                    autorizado</td>
-                                                            <?php endif; ?>
+                    <?php if ($rol === 'administrador' || (isset($m['nivel_permiso']) && ($m['nivel_permiso'] === 'ver_credenciales' || $m['nivel_permiso'] === 'administrar'))): ?>
+                        <td><?= htmlspecialchars($m['usuario_maquina'] ?? '-') ?></td>
+                        <td>
+                            <span id="pass<?= $i ?>" style="display: none;">
+                                <?= htmlspecialchars($m['contraseña'] ?? '') ?>
+                            </span>
+                            <button id="btn<?= $i ?>" onclick="verPassword(<?= $i ?>)" class="boton_ver">VER</button>
+                            <span id="timer<?= $i ?>" style="margin-left:10px; display:none; color:#a41515;"></span>
+                        </td>
+                    <?php else: ?>
+                        <td colspan="2" style="text-align:center; color: #888;">No autorizado</td>
+                    <?php endif; ?>
 
-                                                            <td>
-                                                                <a href="detallesMaquina.php?id=<?= htmlspecialchars($m['id_maquina']) ?>"
-                                                                    class="btn btn-info">Ver</a>
+                    <td>
+                        <a href="detallesMaquina.php?id=<?= htmlspecialchars($m['id_maquina']) ?>" class="btn btn-info">Ver</a>
 
-                                                                <?php if (
-                                                                    $rol === 'administrador' ||
-                                                                    (isset($m['nivel_permiso']) &&
-                                                                        ($m['nivel_permiso'] === 'conectar' || $m['nivel_permiso'] === 'administrar')
-                                                                    )
-                                                                ): ?>
-                                                                    <a href="descargar_rdp.php?id=<?= htmlspecialchars($m['id_maquina']) ?>"
-                                                                        class="btn btn-success">Conectar</a>
-                                                                <?php else: ?>
-                                                                    <span class="text-muted">Sin permiso</span>
-                                                                <?php endif; ?>
+                        <?php if (
+                            $rol === 'administrador' ||
+                            (isset($m['nivel_permiso']) &&
+                                ($m['nivel_permiso'] === 'conectar' || $m['nivel_permiso'] === 'administrar')
+                            )
+                        ): ?>
+                            <a href="descargar_rdp.php?id=<?= htmlspecialchars($m['id_maquina']) ?>" class="btn btn-success">Conectar</a>
+                        <?php else: ?>
+                            <span class="text-muted">Sin permiso</span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+<?php else: ?>
+    <p>No hay máquinas asignadas.</p>
+<?php endif; ?>
 
-                                                            </td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        <?php else: ?>
-                                            <p>No hay máquinas asignadas.</p>
-                                        <?php endif; ?>
+<script>
+    function verPassword(index) {
+        const passSpan = document.getElementById(`pass${index}`);
+        const btn = document.getElementById(`btn${index}`);
+        const timer = document.getElementById(`timer${index}`);
 
-                                    </div>
+        let seconds = 5;
+        timer.textContent = `Ocultando en ${seconds}s`;
+        timer.style.display = "inline";
+        passSpan.style.display = "inline";
+        btn.style.display = "none";
 
-                                    <script>
-                                        function verPassword(index) {
-                                            const passSpan = document.getElementById(`pass${index}`);
-                                            const btn = document.getElementById(`btn${index}`);
-                                            const timer = document.getElementById(`timer${index}`);
-
-                                            let seconds = 5;
-                                            timer.textContent = `Ocultando en ${seconds}s`;
-                                            timer.style.display = "inline";
-                                            passSpan.style.display = "inline";
-                                            btn.style.display = "none";
-
-                                            const interval = setInterval(() => {
-                                                seconds--;
-                                                if (seconds > 0) {
-                                                    timer.textContent = `Ocultando en ${seconds}s`;
-                                                } else {
-                                                    clearInterval(interval);
-                                                    passSpan.style.display = "none";
-                                                    btn.style.display = "inline";
-                                                    timer.style.display = "none";
-                                                }
-                                            }, 1000);
-                                        }
-                                    </script>
+        const interval = setInterval(() => {
+            seconds--;
+            if (seconds > 0) {
+                timer.textContent = `Ocultando en ${seconds}s`;
+            } else {
+                clearInterval(interval);
+                passSpan.style.display = "none";
+                btn.style.display = "inline";
+                timer.style.display = "none";
+            }
+        }, 1000);
+    }
+</script>
 
                                 </div>
                             </div>

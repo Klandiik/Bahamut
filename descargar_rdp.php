@@ -1,8 +1,7 @@
-
 <?php
-//autor: christian adrian pereira 
-//autor: pedro manuel merino garcia
-//autor: noe jefferson chavarry llerenas
+// autor: christian adrian pereira 
+// autor: pedro manuel merino garcia
+// autor: noe jefferson chavarry llerenas
 include 'conexion.php';
 session_start();
 
@@ -48,8 +47,9 @@ if (!$permiso || !in_array($permiso['nivel_permiso'], ['conectar', 'administrar'
     exit;
 }
 
-// Obtener la IP y el usuario de la máquina
-$sql = "SELECT m.direccion_ip, c.usuario_maquina FROM maquinas m
+// Obtener la IP, puerto y usuario de la máquina
+$sql = "SELECT m.direccion_ip, m.puerto, c.usuario_maquina 
+        FROM maquinas m
         LEFT JOIN credenciales c ON c.id_maquina = m.id
         WHERE m.id = :id";
 $stmt = $conn->prepare($sql);
@@ -62,16 +62,22 @@ if (!$info) {
 }
 
 $direccion_ip = $info['direccion_ip'];
+$puerto = $info['puerto'];
 $usuario_maquina = $info['usuario_maquina'];
 
-$rdpContent = <<<RDP
+$filename_ip = preg_replace('/[^a-zA-Z0-9_.-]/', '_', $direccion_ip);
+
+if ($puerto == 3389) {
+    // Generar archivo RDP
+    $full_address = $direccion_ip . ($puerto != 3389 ? ":$puerto" : "");
+    $rdpContent = <<<RDP
 screen mode id:i:2
 use multimon:i:0
 desktopwidth:i:1280
 desktopheight:i:720
 session bpp:i:32
 winposstr:s:0,3,0,0,800,600
-full address:s:$direccion_ip
+full address:s:$full_address
 username:s:$usuario_maquina
 compression:i:1
 keyboardhook:i:2
@@ -96,9 +102,38 @@ disable cursor setting:i:0
 bitmapcachepersistenable:i:1
 RDP;
 
-header('Content-Type: application/x-rdp');
-header('Content-Disposition: attachment; filename="conexion_maquina_' . $id_maquina . '.rdp"');
-header('Content-Length: ' . strlen($rdpContent));
+    $filename = "conexion_{$filename_ip}.rdp";
 
-echo $rdpContent;
-exit;
+    header('Content-Type: application/x-rdp');
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+    header('Content-Length: ' . strlen($rdpContent));
+    echo $rdpContent;
+    exit;
+
+} elseif ($puerto == 22) {
+    // Generar archivo TXT con instrucciones SSH
+    $sshInstructions = <<<TXT
+Para conectarte vía SSH, abre PowerShell o CMD y ejecuta:
+
+ssh $usuario_maquina@$direccion_ip -p $puerto
+
+Si usas PuTTY, configura:
+Host: $direccion_ip
+Puerto: $puerto
+Usuario: $usuario_maquina
+
+TXT;
+
+    $filename = "conexion_{$filename_ip}_SSH.txt";
+
+    header('Content-Type: text/plain');
+    header("Content-Disposition: attachment; filename=\"$filename\"");
+    header('Content-Length: ' . strlen($sshInstructions));
+    echo $sshInstructions;
+    exit;
+
+} else {
+    echo "Puerto no soportado para generación de archivo de conexión.";
+    exit;
+}
+?>

@@ -401,62 +401,96 @@ try {
                                         <div class="usuarios-container w-100">
                                             <div class="contenido" style="overflow-x: auto; width: 100%;">
                                                 <h3>EN OBRAS</h3>
-                                                <img src="img/obras.png" class="obras">
+                                                <div id="carouselExampleIndicators" class="carousel slide div_carru"
+                                                    data-ride="carousel">
+                                                    <ol class="carousel-indicators">
+                                                        <li data-target="#carouselExampleIndicators" data-slide-to="0"
+                                                            class="active"></li>
+                                                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                                    </ol>
+                                                    <div class="carousel-inner">
+                                                        <div class="carousel-item active">
+                                                            <img class="d-block w-100" src="img/usuarios/admin1.jpeg"
+                                                                alt="First slide">
+                                                        </div>
+                                                        <div class="carousel-item">
+                                                            <img class="d-block w-100" src="img/usuarios/usuario1.jpeg"
+                                                                alt="Second slide">
+                                                        </div>
+                                                        <div class="carousel-item">
+                                                            <img class="d-block w-100" src="img/usuarios/usuario2.jpeg"
+                                                                alt="Third slide">
+                                                        </div>
+                                                    </div>
+                                                    <a class="carousel-control-prev" href="#carouselExampleIndicators"
+                                                        role="button" data-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                    <a class="carousel-control-next" href="#carouselExampleIndicators"
+                                                        role="button" data-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                    </div>
 
-                    <footer class="footer bg-white py-3">
-                        <div class="container-fluid">
-                            <div class="text-muted row">
-                                <div class="text-start d-flex col-6">
-                                    <ul class="list-inline mb-0">
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Política de
-                                                privacidad</a>
-                                        </li>
-                                        <li class="list-inline-item"><a href="#" class="text-muted">Términos y
-                                                condiciones</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="text-end col-6">
-                                    <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
-                                            class="text-muted">DataSphere</a></p>
-                                </div>
+                    </div>
+                </div>
+
+                <footer class="footer bg-white py-3">
+                    <div class="container-fluid">
+                        <div class="text-muted row">
+                            <div class="text-start d-flex col-6">
+                                <ul class="list-inline mb-0">
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Política de
+                                            privacidad</a>
+                                    </li>
+                                    <li class="list-inline-item"><a href="#" class="text-muted">Términos y
+                                            condiciones</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="text-end col-6">
+                                <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
+                                        class="text-muted">DataSphere</a></p>
                             </div>
                         </div>
-                    </footer>
-                </div>
+                    </div>
+                </footer>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-            <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-            <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-            <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-                crossorigin="anonymous"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-                integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-                crossorigin="anonymous"></script>
-            <script src="js/navegador.js"></script>
-            <script>
-                const toggle = document.getElementById('toggle');
-                const sidebar = document.querySelector('.sidebar');
-                const main = document.querySelector('.main');
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
+            integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
+            crossorigin="anonymous"></script>
+        <script src="js/navegador.js"></script>
+        <script>
+            const toggle = document.getElementById('toggle');
+            const sidebar = document.querySelector('.sidebar');
+            const main = document.querySelector('.main');
 
-                toggle.addEventListener('click', function () {
-                    sidebar.classList.toggle('collapsed');
-                })
+            toggle.addEventListener('click', function () {
+                sidebar.classList.toggle('collapsed');
+            })
 
-            </script>
+        </script>
     </body>
 
     </html>

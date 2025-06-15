@@ -1,13 +1,18 @@
 <?php
-//autor: christian adrian pereira 
-//autor: pedro manuel merino garcia
-//autor: noe jefferson chavarry llerenas
+// autor: christian adrian pereira 
+// autor: pedro manuel merino garcia
+// autor: noe jefferson chavarry llerenas
+
 session_start();
-require_once("conexion.php"); // tu conexión PDO
+require_once("conexion.php"); // conexión PDO
+
+header('Content-Type: application/json; charset=utf-8');
+
+$response = ["success" => false, "message" => ""];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $correo = $_POST['correo_electronico'];
-    $contrasena = $_POST['contrasena'];
+    $correo = $_POST['correo_electronico'] ?? '';
+    $contrasena = $_POST['contrasena'] ?? '';
 
     try {
         $sql = "SELECT u.id, u.nombre_usuario, u.correo_electronico, u.contraseña, u.id_rol, r.nombre AS rol
@@ -21,29 +26,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($stmt->rowCount() === 1) {
             $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verifica contraseña: si usas hash, usa password_verify
+            // Verifica contraseña (considera que puede estar en hash o plano)
             if (password_verify($contrasena, $usuario['contraseña']) || $contrasena === $usuario['contraseña']) {
                 $_SESSION["id_rol"] = $usuario["id_rol"];
                 $_SESSION["rol_usuario"] = $usuario["rol"];
                 $_SESSION["correo_electronico"] = $usuario["correo_electronico"];
                 $_SESSION["nombre"] = $usuario["nombre_usuario"];
-
-                // Aquí el cambio importante para el ID de usuario
                 $_SESSION["usuario_id"] = $usuario["id"];
 
-                header("Location: index.php");
-                exit;
+                $response["success"] = true;
+                $response["message"] = "✔ Inicio de sesión correcto. Redirigiendo...";
             } else {
-                echo "Contraseña incorrecta. <a href='login.php'>Volver</a>";
+                $response["message"] = "✖ Contraseña incorrecta.";
             }
         } else {
-            echo "Correo no encontrado. <a href='login.php'>Volver</a>";
+            $response["message"] = "✖ Correo no encontrado.";
         }
     } catch (PDOException $e) {
-        echo "Error en la base de datos: " . $e->getMessage();
+        $response["message"] = "Error en la base de datos.";
     }
 } else {
-    header("Location: login.php");
-    exit;
+    $response["message"] = "Acceso inválido.";
 }
 
+echo json_encode($response);
+exit;
+?>

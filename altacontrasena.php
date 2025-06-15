@@ -1,18 +1,21 @@
 <?php
-//autor: christian adrian pereira 
-//autor: pedro manuel merino garcia
-//autor: noe jefferson chavarry llerenas
+// autor: christian adrian pereira 
+// autor: pedro manuel merino garcia
+// autor: noe jefferson chavarry llerenas
+
 try {
     $conexion = new mysqli('localhost', 'root', '', 'Bahamut');
     if ($conexion->connect_error) {
-        die("Error de conexión: " . $conexion->connect_error);
+        // Devolver error simple para el AJAX
+        echo "Error de conexión a la base de datos.";
+        exit;
     }
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $correo = $_POST["correo"];
         $nuevaContrasena = $_POST["nueva_contrasena"];
 
-        // Guardar la contraseña tal cual, sin hash
+        // Guardar la contraseña tal cual, sin hash (aunque NO recomendado en producción)
         $contrasenaPlano = $nuevaContrasena;
 
         $verificar = $conexion->prepare("SELECT id FROM usuarios WHERE correo_electronico = ?");
@@ -25,18 +28,17 @@ try {
             $actualizar->bind_param("ss", $contrasenaPlano, $correo);
 
             if ($actualizar->execute()) {
-                echo "Contraseña actualizada con éxito.";
-                echo "<br><a href='inicio.php'>Iniciar sesión</a>";
+                echo "✔ Contraseña actualizada con éxito.";
             } else {
-                echo "Error al actualizar contraseña: " . $actualizar->error;
+                echo "✖ Error al actualizar contraseña: " . $actualizar->error;
             }
         } else {
-            echo "Correo no encontrado. ¿Está registrado?";
+            echo "✖ Correo no encontrado. ¿Está registrado?";
         }
     } else {
         echo "Acceso inválido.";
     }
 } catch (mysqli_sql_exception $excp) {
-    die("Error en la base de datos: " . $excp->getMessage());
+    echo "Error en la base de datos: " . $excp->getMessage();
 }
 ?>

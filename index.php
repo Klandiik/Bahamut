@@ -241,7 +241,7 @@ try {
                                                 </div>
                                                 <div class="ps-2 col-10">
                                                     <div class="dropdown-menu-header p-0 fw-500">Conexión desde la IP
-                                                        192.123.1.1</div>
+                                                        192.168.1.156</div>
                                                     <div class="text-muted small mt-1">
                                                         Hace 1 hora
                                                     </div>

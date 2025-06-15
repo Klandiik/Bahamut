@@ -174,7 +174,7 @@ try {
                                                 </div>
                                                 <div class="ps-2 col-10">
                                                     <div class="dropdown-menu-header p-0 fw-500">Conexión desde la IP
-                                                        192.123.1.1</div>
+                                                        192.168.1.156</div>
                                                     <div class="text-muted small mt-1">
                                                         Hace 1 hora
                                                     </div>
@@ -293,84 +293,6 @@ try {
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de maquinas</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">5</span>
-                                                    <span class="text-muted">MAQUINAS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-pc-display-horizontal"
-                                                        viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M1.5 0A1.5 1.5 0 0 0 0 1.5v7A1.5 1.5 0 0 0 1.5 10H6v1H1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5v-1h4.5A1.5 1.5 0 0 0 16 8.5v-7A1.5 1.5 0 0 0 14.5 0zm0 1h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5M12 12.5a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0m2 0a.5.5 0 1 1 1 0 .5.5 0 0 1-1 0M1.5 12h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1M1 14.25a.25.25 0 0 1 .25-.25h5.5a.25.25 0 1 1 0 .5h-5.5a.25.25 0 0 1-.25-.25" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de usuarios</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">20</span>
-                                                    <span class="text-muted">USUARIOS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex col-xxl-3 col-sm-6">
-                                <div class="flex-fill card border-0">
-                                    <div class="py-4 card-body card-body-2">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h3 class="mb-2">Contador de empresas</h3>
-                                                <p class="mb-2">Total</p>
-                                                <div class="mb-0">
-                                                    <span class="badge-subtle-sucess me-2 badge">7</span>
-                                                    <span class="text-muted">EMPRESAS</span>
-                                                </div>
-                                            </div>
-                                            <div class="d-inline-block ms-3">
-                                                <div class="star">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
-                                                        <path
-                                                            d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-                                                        <path
-                                                            d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z" />
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="mb-2 mb-xl-2 row">
@@ -383,6 +305,7 @@ try {
                                 <tr>
                                     <th>Nombre</th>
                                     <th>IP</th>
+                                    <th>Puerto</th>
                                     <th>Descripción</th>
                                     <th>Usuario</th>
                                     <th>Contraseña</th>
@@ -391,7 +314,7 @@ try {
                             </thead>
                             <tbody>
                                 <?php
-                                $stmt = $conn->query("SELECT m.id, m.nombre, m.direccion_ip,  m.descripcion, c.usuario_maquina, c.contraseña 
+                                $stmt = $conn->query("SELECT m.id, m.nombre, m.direccion_ip, m.puerto ,  m.descripcion, c.usuario_maquina, c.contraseña 
                              FROM maquinas m 
                              LEFT JOIN credenciales c ON m.id = c.id_maquina");
                                 while ($fila = $stmt->fetch(PDO::FETCH_ASSOC)):
@@ -403,6 +326,8 @@ try {
                                                     value="<?= htmlspecialchars($fila['nombre']) ?>"></td>
                                             <td><input type="text" name="ip" class="form-control"
                                                     value="<?= htmlspecialchars($fila['direccion_ip']) ?>"></td>
+                                            <td><input type="text" name="puerto" class="form-control"
+                                                    value="<?= htmlspecialchars($fila['puerto']) ?>"></td>
                                             <td><input type="text" name="descripcion" class="form-control"
                                                     value="<?= htmlspecialchars($fila['descripcion']) ?>"></td>
                                             <td><input type="text" name="usuario" class="form-control"

@@ -86,7 +86,7 @@ try {
                             </li>
 
                             <li class="sidebar-item">
-                                <a href="producto.php" class="sidebar-link">
+                                <a href="sobre_nosotros.php" class="sidebar-link">
                                     <i class="bi bi-globe"></i>
                                     <span class="align-middle">Sobre Nosotros</span>
                                 </a>

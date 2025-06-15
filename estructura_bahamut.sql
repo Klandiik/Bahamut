@@ -1,5 +1,4 @@
-CREATE DATABASE bahamut;
-USE bahamut;
+
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
@@ -8,6 +7,8 @@ USE bahamut;
 -- Tiempo de generación: 15-06-2025 a las 13:52:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
+CREATE DATABASE bahamut;
+USE bahamut;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;

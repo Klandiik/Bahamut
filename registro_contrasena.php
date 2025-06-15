@@ -13,28 +13,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet" />
-
-    <style>
-        /* Estilo para la nube flotante */
-        .mensaje-flotante {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4caf50;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            font-weight: bold;
-            z-index: 9999;
-            max-width: 300px;
-            transition: opacity 0.5s ease;
-        }
-
-        .mensaje-flotante.error {
-            background: #f44336;
-        }
-    </style>
 </head>
 
 <body>

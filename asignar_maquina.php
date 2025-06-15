@@ -282,28 +282,26 @@ try {
                             <!--Idiomas ¡-->
                             <a href="#" type="button" class="nav-icon modes nav-link d-flex align-items-center"></a>
                             <div class="me-2 nav-item dropdown d-flex position-relative">
-                                <a id="element"
-                                    class="nav-flag d-flex align-items-center nav-icon nav-link  dropdown-toggle"
-                                    aria-expanded="true">
-                                    <div class="position-relative">
-                                        <img src="img/españa.webp" alt="" class="img-fluid">
-                                    </div>
-                                </a>
-                                <div class="dropdown-menu-lg py-0 dropdown-menu dropdown-menu-end" data-bs-popper="static"
-                                    aria-labelledby="element" style="width: 150px;">
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/españa.webp" alt="espana" width="20" class="align-middle me-1">
-                                        <span class="align-middle">España</span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/Ingles.webp" alt="ingles" width="20" class="align-middle me-1">
-                                        <span class="align-middle">Ingles</span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/aleman.webp" alt="aleman" width="20" class="align-middle me-1">
-                                        <span class="align-middle">Aleman</span>
-                                    </a>
+
+                                <!-- Dropdown personalizado para seleccionar idioma -->
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="img/españa.webp" alt="España" width="20" class="me-1"> Español
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="es"><img
+                                                    src="img/españa.webp" width="20" class="me-1"> Español</a></li>
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="en"><img
+                                                    src="img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="de"><img
+                                                    src="img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
+                                    </ul>
                                 </div>
+
+                                <!-- Contenedor oculto donde Google Translate pone el widget -->
+                                <div id="google_translate_element" style="display:none;"></div>
+
                             </div>
                             <!--Usuario ¡-->
                             <div class="nav-item dropdown nav-item-user">
@@ -428,6 +426,44 @@ try {
                 sidebar.classList.toggle('collapsed');
             })
 
+        </script>
+        <!--TRADUCTOR -->
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'es',
+                    includedLanguages: 'es,en,de',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element');
+            }
+        </script>
+        <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+        <script>
+            // Cambiar idioma y guardar cookie googtrans sin domain (más compatible)
+            document.querySelectorAll('.language-option').forEach(function (element) {
+                element.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var lang = this.getAttribute('data-lang');
+                    document.cookie = "googtrans=/es/" + lang + "; path=/;";
+                    location.reload();
+                });
+            });
+
+            // Ajustar posición del body cuando el banner aparece o desaparece
+            const observer = new MutationObserver(() => {
+                const banner = document.querySelector('iframe.goog-te-banner-frame');
+                if (banner) {
+                    document.body.style.top = '40px'; // Altura del banner estilizado
+                    document.body.style.position = 'relative';
+                } else {
+                    document.body.style.top = '0';
+                    document.body.style.position = 'static';
+                }
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
         </script>
     </body>
 

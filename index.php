@@ -190,62 +190,6 @@ try {
                     </span>
                     <div class="navbar-collapse collapse">
                         <div class="navbar-align navbar-nav ms-auto">
-                            <!--Mensajes ¡-->
-                            <div class="me-2 nav-item dropdown d-flex position-relative">
-                                <a id="element" class="d-flex align-items-center nav-link nav-icon dropdown-toggle"
-                                    aria-expanded="true">
-                                    <div class="position-relative">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                            class="bi bi-chat" viewBox="0 0 16 16">
-                                            <path
-                                                d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
-                                        </svg>
-                                        <span class="indicator">2</span>
-                                    </div>
-                                </a>
-                                <div class="dropdown-menu-lg py-0 dropdown-menu dropdown-menu-end" data-bs-popper="static">
-                                    <div class="w-100 position-relative text-center dropdown-menu-header">2 Nuevos Mensajes
-                                    </div>
-                                    <div class="list-group d-flex g-5">
-                                        <div class="list-group-item">
-                                            <div class="align-items-center g-0 row">
-                                                <div class="col-2">
-                                                    <img class="avatar img-fluid rounded.circle"
-                                                        src="img/usuarios/admin.jpeg" alt="Christian">
-                                                </div>
-                                                <div class="ps-2 col-10">
-                                                    <div class="dropdown-menu-header p-0 fw-500">Chritian</div>
-                                                    <p class="text-muted small mt-1">
-                                                        ¿Como va la pagina?, ¿has progresado?.
-                                                    </p>
-                                                    <div class="text-muted small mt-1">
-                                                        Hace 15 min
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item">
-                                            <div class="align-items-center g-0 row">
-                                                <div class="col-2">
-                                                    <img class="avatar img-fluid rounded.circle"
-                                                        src="img/usuarios/usuario1.jpeg" alt="Pedro">
-                                                </div>
-                                                <div class="ps-2 col-10">
-                                                    <div class="dropdown-menu-header p-0 fw-500">Pedro</div>
-                                                    <p class="text-muted small mt-1">
-                                                        No veas, tremenda batalla he tenido en el baño.
-                                                    </p>
-                                                    <div class="text-muted small mt-1">
-                                                        Hace 40 min
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-100 position-relative text-center dropdown-menu-footer">Ver todos los
-                                        mensajes</div>
-                                </div>
-                            </div>
                             <!--Notificaciones ¡-->
                             <div class="me-2 nav-item dropdown d-flex position-relative">
                                 <a id="element" class="d-flex align-items-center nav-link nav-icon dropdown-toggle"
@@ -332,28 +276,26 @@ try {
                             <!--Idiomas ¡-->
                             <a href="#" type="button" class="nav-icon modes nav-link d-flex align-items-center"></a>
                             <div class="me-2 nav-item dropdown d-flex position-relative">
-                                <a id="element"
-                                    class="nav-flag d-flex align-items-center nav-icon nav-link  dropdown-toggle"
-                                    aria-expanded="true">
-                                    <div class="position-relative">
-                                        <img src="img/españa.webp" alt="" class="img-fluid">
-                                    </div>
-                                </a>
-                                <div class="dropdown-menu-lg py-0 dropdown-menu dropdown-menu-end" data-bs-popper="static"
-                                    aria-labelledby="element" style="width: 150px;">
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/españa.webp" alt="espana" width="20" class="align-middle me-1">
-                                        <span class="align-middle">España</span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/Ingles.webp" alt="ingles" width="20" class="align-middle me-1">
-                                        <span class="align-middle">Ingles</span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/aleman.webp" alt="aleman" width="20" class="align-middle me-1">
-                                        <span class="align-middle">Aleman</span>
-                                    </a>
+
+                                <!-- Dropdown personalizado para seleccionar idioma -->
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="img/españa.webp" alt="España" width="20" class="me-1"> Español
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="es"><img
+                                                    src="img/españa.webp" width="20" class="me-1"> Español</a></li>
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="en"><img
+                                                    src="img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="de"><img
+                                                    src="img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
+                                    </ul>
                                 </div>
+
+                                <!-- Contenedor oculto donde Google Translate pone el widget -->
+                                <div id="google_translate_element" style="display:none;"></div>
+
                             </div>
                             <!--Usuario ¡-->
                             <div class="nav-item dropdown nav-item-user">
@@ -513,6 +455,44 @@ try {
                 sidebar.classList.toggle('collapsed');
             })
 
+        </script>
+        <!--TRADUCTOR -->
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'es',
+                    includedLanguages: 'es,en,de',
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                    autoDisplay: false
+                }, 'google_translate_element');
+            }
+        </script>
+        <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+        <script>
+            // Cambiar idioma y guardar cookie googtrans sin domain (más compatible)
+            document.querySelectorAll('.language-option').forEach(function (element) {
+                element.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var lang = this.getAttribute('data-lang');
+                    document.cookie = "googtrans=/es/" + lang + "; path=/;";
+                    location.reload();
+                });
+            });
+
+            // Ajustar posición del body cuando el banner aparece o desaparece
+            const observer = new MutationObserver(() => {
+                const banner = document.querySelector('iframe.goog-te-banner-frame');
+                if (banner) {
+                    document.body.style.top = '40px'; // Altura del banner estilizado
+                    document.body.style.position = 'relative';
+                } else {
+                    document.body.style.top = '0';
+                    document.body.style.position = 'static';
+                }
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
         </script>
     </body>
 

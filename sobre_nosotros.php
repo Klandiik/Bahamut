@@ -146,62 +146,6 @@ try {
                     </span>
                     <div class="navbar-collapse collapse">
                         <div class="navbar-align navbar-nav ms-auto">
-                            <!--Mensajes ¡-->
-                            <div class="me-2 nav-item dropdown d-flex position-relative">
-                                <a id="element" class="d-flex align-items-center nav-link nav-icon dropdown-toggle"
-                                    aria-expanded="true">
-                                    <div class="position-relative">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                            class="bi bi-chat" viewBox="0 0 16 16">
-                                            <path
-                                                d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
-                                        </svg>
-                                        <span class="indicator">2</span>
-                                    </div>
-                                </a>
-                                <div class="dropdown-menu-lg py-0 dropdown-menu dropdown-menu-end" data-bs-popper="static">
-                                    <div class="w-100 position-relative text-center dropdown-menu-header">2 Nuevos Mensajes
-                                    </div>
-                                    <div class="list-group d-flex g-5">
-                                        <div class="list-group-item">
-                                            <div class="align-items-center g-0 row">
-                                                <div class="col-2">
-                                                    <img class="avatar img-fluid rounded.circle"
-                                                        src="img/usuarios/admin.jpeg" alt="Christian">
-                                                </div>
-                                                <div class="ps-2 col-10">
-                                                    <div class="dropdown-menu-header p-0 fw-500">Chritian</div>
-                                                    <p class="text-muted small mt-1">
-                                                        ¿Como va la pagina?, ¿has progresado?.
-                                                    </p>
-                                                    <div class="text-muted small mt-1">
-                                                        Hace 15 min
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-item">
-                                            <div class="align-items-center g-0 row">
-                                                <div class="col-2">
-                                                    <img class="avatar img-fluid rounded.circle"
-                                                        src="img/usuarios/usuario1.jpeg" alt="Pedro">
-                                                </div>
-                                                <div class="ps-2 col-10">
-                                                    <div class="dropdown-menu-header p-0 fw-500">Pedro</div>
-                                                    <p class="text-muted small mt-1">
-                                                        No veas, tremenda batalla he tenido en el baño.
-                                                    </p>
-                                                    <div class="text-muted small mt-1">
-                                                        Hace 40 min
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="w-100 position-relative text-center dropdown-menu-footer">Ver todos los
-                                        mensajes</div>
-                                </div>
-                            </div>
                             <!--Notificaciones ¡-->
                             <div class="me-2 nav-item dropdown d-flex position-relative">
                                 <a id="element" class="d-flex align-items-center nav-link nav-icon dropdown-toggle"
@@ -288,28 +232,27 @@ try {
                             <!--Idiomas ¡-->
                             <a href="#" type="button" class="nav-icon modes nav-link d-flex align-items-center"></a>
                             <div class="me-2 nav-item dropdown d-flex position-relative">
-                                <a id="element"
-                                    class="nav-flag d-flex align-items-center nav-icon nav-link  dropdown-toggle"
-                                    aria-expanded="true">
-                                    <div class="position-relative">
-                                        <img src="img/españa.webp" alt="" class="img-fluid">
-                                    </div>
-                                </a>
-                                <div class="dropdown-menu-lg py-0 dropdown-menu dropdown-menu-end" data-bs-popper="static"
-                                    aria-labelledby="element" style="width: 150px;">
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/españa.webp" alt="espana" width="20" class="align-middle me-1">
-                                        <span class="align-middle">España</span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/Ingles.webp" alt="ingles" width="20" class="align-middle me-1">
-                                        <span class="align-middle">Ingles</span>
-                                    </a>
-                                    <a href="#" class="dropdown-item">
-                                        <img src="img/aleman.webp" alt="aleman" width="20" class="align-middle me-1">
-                                        <span class="align-middle">Aleman</span>
-                                    </a>
+
+                                <!-- Dropdown personalizado para seleccionar idioma -->
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="img/españa.webp" alt="España" width="20" class="me-1"> Español
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="es"><img
+                                                    src="img/españa.webp" width="20" class="me-1"> Español</a></li>
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="en"><img
+                                                    src="img/Ingles.webp" width="20" class="me-1"> Inglés</a></li>
+                                        <li><a class="dropdown-item language-option" href="#" data-lang="de"><img
+                                                    src="img/aleman.webp" width="20" class="me-1"> Alemán</a></li>
+                                    </ul>
                                 </div>
+
+                                <!-- Contenedor oculto donde Google Translate pone el widget -->
+                                <div id="google_translate_element" style="display:none;"></div>
+
+
                             </div>
                             <!--Usuario ¡-->
                             <div class="nav-item dropdown nav-item-user">
@@ -364,34 +307,6 @@ try {
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
                                 <h3>Sobre Nosotros</h3>
-                            </div>
-                            <div class="ms-auto text-end mt-n1 col-auto">
-                                <div class="d-inline me-2 dropdown">
-                                    <button type="button" class="nav-icon bg-white shadow-sm dropdown-toggle btn btn-light"
-                                        aria-expanded="true">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                            class="bi bi-person-gear" viewBox="0 0 16 16">
-                                            <path
-                                                d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1zm3.63-4.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
-                                        </svg>
-                                        <span style="font-size: .9rem;">Hoy</span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a href="#" class="dropdown-item">
-                                            Activo
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            Otro Activo
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            Algo más aquí
-                                        </a>
-                                        <a href="#" class="dropdown-item">
-                                            Enlace separado
-                                        </a>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
 
@@ -546,53 +461,94 @@ try {
                         </div>
                         -->
 
-                        <footer class="footer bg-white py-3">
-                            <div class="container-fluid">
-                                <div class="text-muted row">
-                                    <div class="text-start d-flex col-6">
-                                        <ul class="list-inline mb-0">
-                                            <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
-                                            <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a>
-                                            </li>
-                                            <li class="list-inline-item"><a href="#" class="text-muted">Política de
-                                                    privacidad</a>
-                                            </li>
-                                            <li class="list-inline-item"><a href="#" class="text-muted">Términos y
-                                                    condiciones</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="text-end col-6">
-                                        <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
-                                                class="text-muted">DataSphere</a></p>
+                            <footer class="footer bg-white py-3">
+                                <div class="container-fluid">
+                                    <div class="text-muted row">
+                                        <div class="text-start d-flex col-6">
+                                            <ul class="list-inline mb-0">
+                                                <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
+                                                <li class="list-inline-item"><a href="#" class="text-muted">Centro de
+                                                        ayuda</a>
+                                                </li>
+                                                <li class="list-inline-item"><a href="#" class="text-muted">Política de
+                                                        privacidad</a>
+                                                </li>
+                                                <li class="list-inline-item"><a href="#" class="text-muted">Términos y
+                                                        condiciones</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="text-end col-6">
+                                            <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a
+                                                    href="#" class="text-muted">DataSphere</a></p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </footer>
+                            </footer>
+                        </div>
                     </div>
-                </div>
-                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></>
-                        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-                <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-                <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-                <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-                    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-                    crossorigin="anonymous"></script>
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-                    integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-                    crossorigin="anonymous"></script>
-                <script src="js/navegador.js"></script>
-                <script>
-                                                                                                        const toggle = document.getElementById('toggle');
-                                                                                                        const sidebar = document.querySelector('.sidebar');
-                                                                                                        const main = document.querySelector('.main');
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+                    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+                    <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+                    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+                        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+                        crossorigin="anonymous"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
+                        integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
+                        crossorigin="anonymous"></script>
+                    <script src="js/navegador.js"></script>
+                    <script>
+                        const toggle = document.getElementById('toggle');
+                        const sidebar = document.querySelector('.sidebar');
+                        const main = document.querySelector('.main');
 
-                                                                                                        toggle.addEventListener('click', function () {
-                                                                                                            sidebar.classList.toggle('collapsed');
-                                    })
+                        toggle.addEventListener('click', function () {
+                            sidebar.classList.toggle('collapsed');
+                        })
 
-                </script>
+                    </script>
+
+                    <script type="text/javascript">
+                        function googleTranslateElementInit() {
+                            new google.translate.TranslateElement({
+                                pageLanguage: 'es',
+                                includedLanguages: 'es,en,de',
+                                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                                autoDisplay: false
+                            }, 'google_translate_element');
+                        }
+                    </script>
+                    <script
+                        src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+                    <script>
+                        // Cambiar idioma y guardar cookie googtrans sin domain (más compatible)
+                        document.querySelectorAll('.language-option').forEach(function (element) {
+                            element.addEventListener('click', function (e) {
+                                e.preventDefault();
+                                var lang = this.getAttribute('data-lang');
+                                document.cookie = "googtrans=/es/" + lang + "; path=/;";
+                                location.reload();
+                            });
+                        });
+
+                        // Ajustar posición del body cuando el banner aparece o desaparece
+                        const observer = new MutationObserver(() => {
+                            const banner = document.querySelector('iframe.goog-te-banner-frame');
+                            if (banner) {
+                                document.body.style.top = '40px'; // Altura del banner estilizado
+                                document.body.style.position = 'relative';
+                            } else {
+                                document.body.style.top = '0';
+                                document.body.style.position = 'static';
+                            }
+                        });
+
+                        observer.observe(document.body, { childList: true, subtree: true });
+                    </script>
+
     </body>
 
     </html>

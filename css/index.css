@@ -8,6 +8,10 @@
     text-decoration: none;
     font-family: "Poppins", serif;
 }
+/*traductor*/
+.dropdown{
+    margin-top: 20px;
+}
 
 /*sobre nosotros*/
 .img-small{

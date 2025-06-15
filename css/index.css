@@ -10,15 +10,11 @@
 }
 
 /*sobre nosotros*/
-.div_carru {
-    width: 100%;
-    height: 100%;
+.img-small{
+    width: 180px; /* ajusta el ancho máximo deseado */
+    height: auto; /* mantiene la proporción */
 }
 
-.div_carru img {
-    width: 500px;
-    height: 500px;
-}
 
 /*IMAGENN USUARIO*/
 .imgUSU {

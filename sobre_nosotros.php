@@ -363,7 +363,7 @@ try {
                     <div class="p-0 container-fluid">
                         <div class="mb-2 mb-xl-2 row">
                             <div class="d-none d-sm-block col-auto">
-                                <h3>Usuarios Titan Fortress</h3>
+                                <h3>Sobre Nosotros</h3>
                             </div>
                             <div class="ms-auto text-end mt-n1 col-auto">
                                 <div class="d-inline me-2 dropdown">
@@ -394,103 +394,205 @@ try {
 
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="w-100">
-                                <div class="illustration card border-0 w-100" style="background-color: #e0eafc;">
-                                    <div class="card-body w-100">
-                                        <div class="usuarios-container w-100">
-                                            <div class="contenido" style="overflow-x: auto; width: 100%;">
-                                                <h3>EN OBRAS</h3>
-                                                <div id="carouselExampleIndicators" class="carousel slide div_carru"
-                                                    data-ride="carousel">
-                                                    <ol class="carousel-indicators">
-                                                        <li data-target="#carouselExampleIndicators" data-slide-to="0"
-                                                            class="active"></li>
-                                                        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                                                        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                                                    </ol>
-                                                    <div class="carousel-inner">
-                                                        <div class="carousel-item active">
-                                                            <img class="d-block w-100" src="img/usuarios/admin1.jpeg"
-                                                                alt="First slide">
+
+                        <!-- INFORMACION SOBRE NOSOTROS DETALLADO-->
+                        <div class="content">
+                            <div class="p-0 container-fluid">
+                                <div class="row">
+                                    <div class="d-flex col-xxl-3 col-sm-6">
+                                        <div class="flex-fill card border-0">
+                                            <div class="py-4 card-body card-body-2">
+                                                <div class="d-flex align-items-start">
+                                                    <div class="flex-grow-1 d-flex flex-column align-items-center">
+                                                        <div>
+                                                            <img src="img/nosotros/vpn.png" alt="vpn"
+                                                                class="img-fluid illustration-img img-small">
                                                         </div>
-                                                        <div class="carousel-item">
-                                                            <img class="d-block w-100" src="img/usuarios/usuario1.jpeg"
-                                                                alt="Second slide">
-                                                        </div>
-                                                        <div class="carousel-item">
-                                                            <img class="d-block w-100" src="img/usuarios/usuario2.jpeg"
-                                                                alt="Third slide">
+                                                        <br>
+                                                        <div class="text-center">
+                                                            <p class="fw-bold">VPN Segura</p>
+                                                            <span>Protegemos el acceso remoto de tus empleados mediante
+                                                                redes privadas virtuales cifradas,
+                                                                asegurando la confidencialidad de la información y evitando
+                                                                interceptaciones externas.</span>
                                                         </div>
                                                     </div>
-                                                    <a class="carousel-control-prev" href="#carouselExampleIndicators"
-                                                        role="button" data-slide="prev">
-                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                        <span class="sr-only">Previous</span>
-                                                    </a>
-                                                    <a class="carousel-control-next" href="#carouselExampleIndicators"
-                                                        role="button" data-slide="next">
-                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                        <span class="sr-only">Next</span>
-                                                    </a>
                                                 </div>
-
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex col-xxl-3 col-sm-6">
+                                        <div class="flex-fill card border-0">
+                                            <div class="py-4 card-body card-body-2">
+                                                <div class="d-flex align-items-start">
+                                                    <div class="flex-grow-1 d-flex flex-column align-items-center">
+                                                        <div>
+                                                            <img src="img/nosotros/rdp.png" alt="vpn"
+                                                                class="img-fluid illustration-img img-small">
+                                                        </div>
+                                                        <br>
+                                                        <div class="text-center">
+                                                            <p class="fw-bold">Acceso RDP Controlado</p>
+                                                            <span>Gestionamos y aseguramos el acceso a escritorios remotos
+                                                                (RDP), con monitoreo continuo y
+                                                                autenticación reforzada para prevenir accesos no
+                                                                autorizados.</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex col-xxl-3 col-sm-6">
+                                        <div class="flex-fill card border-0">
+                                            <div class="py-4 card-body card-body-2">
+                                                <div class="d-flex align-items-start">
+                                                    <div class="flex-grow-1 d-flex flex-column align-items-center">
+                                                        <div>
+                                                            <img src="img/nosotros/red.png" alt="vpn"
+                                                                class="img-fluid illustration-img img-small">
+                                                        </div>
+                                                        <br>
+                                                        <div class="text-center">
+                                                            <p class="fw-bold">Red Segura</p>
+                                                            <span>Diseñamos e implementamos infraestructuras de red con
+                                                                segmentación, detección de amenazas y políticas de acceso,
+                                                                garantizando un
+                                                                entorno seguro para tus operaciones digitales.</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex col-xxl-3 col-sm-6">
+                                        <div class="flex-fill card border-0">
+                                            <div class="py-4 card-body card-body-2">
+                                                <div class="d-flex align-items-start">
+                                                    <div class="flex-grow-1 d-flex flex-column align-items-center">
+                                                        <div>
+                                                            <img src="img/nosotros/asistencia.png" alt="vpn"
+                                                                class="img-fluid illustration-img img-small">
+                                                        </div>
+                                                        <br>
+                                                        <div class="text-center">
+                                                            <p class="fw-bold">Asistencia 24/7</p>
+                                                            <span> Nuestro equipo de expertos está disponible 24 horas al
+                                                                día, 7 días a
+                                                                la semana, para responder ante incidentes de seguridad,
+                                                                resolver problemas técnicos y ofrecer soporte
+                                                                inmediato.</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <!-- INFORMACION SOBRE NOSOTROS-->
+                        <div class="row">
+                            <div class="d-flex w-100">
+                                <div class="illustration flex-fill card border-0">
+                                    <div class="p-0 d-flex flex-fill card-body">
+                                        <div class="chart-container">
+                                            <br>
+                                            <h2 class="text-center">Nuestros Ideales</h2><br>
+                                            <ol>
+                                                <li><i class="bi bi-shield-lock-fill me-2 text-primary"></i><span
+                                                        class="fw-bold">Confianza y Transparencia: </span>
+                                                    Construimos relaciones sólidas basadas en la honestidad, la
+                                                    confidencialidad y el cumplimiento estricto de normativas
+                                                    internacionales de ciberseguridad.</li>
+                                                <li><i class="bi bi-shield-check me-2 text-success"></i><span
+                                                        class="fw-bold">Protección Proactiva: </span>
+                                                    No esperamos a que ocurra un incidente. Nuestra filosofía es
+                                                    anticiparnos a las amenazas, con soluciones preventivas, monitoreo
+                                                    constante y mejoras continuas.</li>
+                                                <li><i class="bi bi-lightbulb-fill me-2 text-warning"></i><span
+                                                        class="fw-bold">Innovación Continua: </span>
+                                                    La tecnología evoluciona, y nosotros también. Invertimos en
+                                                    investigación, herramientas avanzadas y capacitación para estar siempre
+                                                    un paso adelante de los atacantes.</li>
+                                                <li><i class="bi bi-people-fill me-2 text-info"></i><span
+                                                        class="fw-bold">Accesibilidad y Cercanía: </span>
+                                                    Acompañamos a nuestros clientes con un enfoque personalizado, cercano y
+                                                    disponible 24/7, para que sientan que su seguridad está en manos
+                                                    expertas y comprometidas.</li>
+                                                <li><i class="bi bi-globe2 me-2 text-secondary"></i><span
+                                                        class="fw-bold">Responsabilidad Social Digital: </span>
+                                                    Promovemos una cultura de ciberseguridad responsable, ética y
+                                                    sostenible, educando y concientizando sobre los riesgos y mejores
+                                                    prácticas del entorno digital.</li>
+                                            </ol>
+                                            <br>
+                                        </div>
 
-                    </div>
-                </div>
-
-                <footer class="footer bg-white py-3">
-                    <div class="container-fluid">
-                        <div class="text-muted row">
-                            <div class="text-start d-flex col-6">
-                                <ul class="list-inline mb-0">
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a></li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Política de
-                                            privacidad</a>
-                                    </li>
-                                    <li class="list-inline-item"><a href="#" class="text-muted">Términos y
-                                            condiciones</a>
-                                    </li>
-                                </ul>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="text-end col-6">
-                                <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
-                                        class="text-muted">DataSphere</a></p>
+                            <!-- 
+                            <div class="d-flex w-100">
+                                <div class="illustration flex-fill card border-0" style="background-color: #e0eafc;">
+                                    <div class="p-0 d-flex flex-fill card-body">
+                                        <div class="chart-container">
+                                            <h2>Máquinas por Tipo</h2>
+                                            <canvas id="maquinasChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        -->
+
+                        <footer class="footer bg-white py-3">
+                            <div class="container-fluid">
+                                <div class="text-muted row">
+                                    <div class="text-start d-flex col-6">
+                                        <ul class="list-inline mb-0">
+                                            <li class="list-inline-item"><a href="#" class="text-muted">Support</a></li>
+                                            <li class="list-inline-item"><a href="#" class="text-muted">Centro de ayuda</a>
+                                            </li>
+                                            <li class="list-inline-item"><a href="#" class="text-muted">Política de
+                                                    privacidad</a>
+                                            </li>
+                                            <li class="list-inline-item"><a href="#" class="text-muted">Términos y
+                                                    condiciones</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="text-end col-6">
+                                        <p class="mb-0">Copyright © 2025 Tintan Fortress - All rights reserved <a href="#"
+                                                class="text-muted">DataSphere</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </footer>
                     </div>
-                </footer>
-            </div>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
-        <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
-            integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
-            crossorigin="anonymous"></script>
-        <script src="js/navegador.js"></script>
-        <script>
-            const toggle = document.getElementById('toggle');
-            const sidebar = document.querySelector('.sidebar');
-            const main = document.querySelector('.main');
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></>
+                        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+                <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+                <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+                <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+                    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+                    crossorigin="anonymous"></script>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js"
+                    integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D"
+                    crossorigin="anonymous"></script>
+                <script src="js/navegador.js"></script>
+                <script>
+                                                                                                        const toggle = document.getElementById('toggle');
+                                                                                                        const sidebar = document.querySelector('.sidebar');
+                                                                                                        const main = document.querySelector('.main');
 
-            toggle.addEventListener('click', function () {
-                sidebar.classList.toggle('collapsed');
-            })
+                                                                                                        toggle.addEventListener('click', function () {
+                                                                                                            sidebar.classList.toggle('collapsed');
+                                    })
 
-        </script>
+                </script>
     </body>
 
     </html>
